@@ -27,3 +27,8 @@ La API permitirá que los docentes registren su disponibilidad, que los estudian
 - SQLite para desarrollo
 - PostgreSQL para producción
 - GitHub Actions
+
+## Integrantes y módulos
+
+- Steveen Acosta: estructura inicial del proyecto.
+- Karen Holguín: módulo Disponibilidad Docente.
