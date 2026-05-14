@@ -32,3 +32,5 @@ La API permitirá que los docentes registren su disponibilidad, que los estudian
 
 - Steveen Acosta: estructura inicial del proyecto.
 - Karen Holguín: módulo Disponibilidad Docente.
+- Jorge Mero: módulo Solicitud de Tutoria.
+- Steveen Acosta: módulo Sesiones de Tutoria.
