@@ -1,7 +1,27 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/go-chi/chi/v5"
+
+	"github.com/steveenacostapatino/tutorias-uleam-api/internal/handlers"
+)
 
 func main() {
-	fmt.Println("API de gestión de tutorías académicas ULEAM")
+
+	r := chi.NewRouter()
+
+	r.Post("/api/v1/disponibilidades", handlers.CreateDisponibilidad)
+
+	r.Get("/api/v1/disponibilidades", handlers.GetDisponibilidades)
+
+	fmt.Println("Servidor ejecutándose en http://localhost:8080")
+
+	err := http.ListenAndServe(":8080", r)
+
+	if err != nil {
+		fmt.Println("Error al iniciar servidor:", err)
+	}
 }
