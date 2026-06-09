@@ -74,3 +74,24 @@ func UpdateDisponibilidad(w http.ResponseWriter, r *http.Request) {
 
 	http.Error(w, "Disponibilidad no encontrada", http.StatusNotFound)
 }
+
+func DeleteDisponibilidad(w http.ResponseWriter, r *http.Request) {
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+	for i, disponibilidad := range storage.Disponibilidades {
+		if disponibilidad.ID == id {
+			storage.Disponibilidades = append(
+				storage.Disponibilidades[:i],
+				storage.Disponibilidades[i+1:]...,
+			)
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("Disponibilidad eliminada"))
+			return
+		}
+	}
+	http.Error(w, "Disponibilidad no encontrada", http.StatusNotFound)
+}
