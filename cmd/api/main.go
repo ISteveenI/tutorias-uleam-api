@@ -14,8 +14,8 @@ func main() {
 	r := chi.NewRouter()
 
 	r.Post("/api/v1/disponibilidades", handlers.CreateDisponibilidad)
-
 	r.Get("/api/v1/disponibilidades", handlers.GetDisponibilidades)
+	r.Get("/api/v1/disponibilidades/{id}", handlers.GetDisponibilidadByID)
 
 	fmt.Println("Servidor ejecutándose en http://localhost:8080")
 
