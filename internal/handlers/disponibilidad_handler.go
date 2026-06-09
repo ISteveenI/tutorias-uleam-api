@@ -12,18 +12,41 @@ import (
 
 
 func CreateDisponibilidad(w http.ResponseWriter, r *http.Request) {
+
 	var disponibilidad models.DisponibilidadDocente
+
 	err := json.NewDecoder(r.Body).Decode(&disponibilidad)
+
 	if err != nil {
 		http.Error(w, "Datos inválidos", http.StatusBadRequest)
 		return
 	}
+
+	// Validaciones
+	if disponibilidad.Materia == "" {
+		http.Error(w, "La materia es obligatoria", http.StatusBadRequest)
+		return
+	}
+
+	if disponibilidad.Cupos <= 0 {
+		http.Error(w, "Los cupos deben ser mayores a cero", http.StatusBadRequest)
+		return
+	}
+
+	if disponibilidad.DocenteID <= 0 {
+		http.Error(w, "El ID del docente es obligatorio", http.StatusBadRequest)
+		return
+	}
+
 	disponibilidad.ID = len(storage.Disponibilidades) + 1
+
 	storage.Disponibilidades = append(
 		storage.Disponibilidades,
 		disponibilidad,
 	)
+
 	w.WriteHeader(http.StatusCreated)
+
 	json.NewEncoder(w).Encode(disponibilidad)
 }
 
