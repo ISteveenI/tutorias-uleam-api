@@ -10,26 +10,20 @@ import (
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/storage"
 )
 
+
 func CreateDisponibilidad(w http.ResponseWriter, r *http.Request) {
-
 	var disponibilidad models.DisponibilidadDocente
-
 	err := json.NewDecoder(r.Body).Decode(&disponibilidad)
-
 	if err != nil {
 		http.Error(w, "Datos inválidos", http.StatusBadRequest)
 		return
 	}
-
 	disponibilidad.ID = len(storage.Disponibilidades) + 1
-
 	storage.Disponibilidades = append(
 		storage.Disponibilidades,
 		disponibilidad,
 	)
-
 	w.WriteHeader(http.StatusCreated)
-
 	json.NewEncoder(w).Encode(disponibilidad)
 }
 
@@ -53,5 +47,30 @@ func GetDisponibilidadByID(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}	
+	http.Error(w, "Disponibilidad no encontrada", http.StatusNotFound)
+}
+
+func UpdateDisponibilidad(w http.ResponseWriter, r *http.Request) {
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+	var updated models.DisponibilidadDocente
+	err = json.NewDecoder(r.Body).Decode(&updated)
+	if err != nil {
+		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+		return
+	}
+	for i, disponibilidad := range storage.Disponibilidades {
+		if disponibilidad.ID == id {
+			updated.ID = id
+			storage.Disponibilidades[i] = updated
+			json.NewEncoder(w).Encode(updated)
+			return
+		}
+	}
+
 	http.Error(w, "Disponibilidad no encontrada", http.StatusNotFound)
 }

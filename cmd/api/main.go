@@ -16,7 +16,8 @@ func main() {
 	r.Post("/api/v1/disponibilidades", handlers.CreateDisponibilidad)
 	r.Get("/api/v1/disponibilidades", handlers.GetDisponibilidades)
 	r.Get("/api/v1/disponibilidades/{id}", handlers.GetDisponibilidadByID)
-
+	r.Put("/api/v1/disponibilidades/{id}", handlers.UpdateDisponibilidad)
+	
 	fmt.Println("Servidor ejecutándose en http://localhost:8080")
 
 	err := http.ListenAndServe(":8080", r)
