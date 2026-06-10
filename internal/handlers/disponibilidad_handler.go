@@ -22,7 +22,6 @@ func CreateDisponibilidad(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Validaciones
 	if disponibilidad.Materia == "" {
 		http.Error(w, "La materia es obligatoria", http.StatusBadRequest)
 		return
