@@ -61,3 +61,37 @@ func GetSolicitudByID(w http.ResponseWriter, r *http.Request) {
 
 	http.Error(w, "Solicitud no encontrada", http.StatusNotFound)
 }
+
+func UpdateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
+
+	idParam := chi.URLParam(r, "id")
+
+	id, err := strconv.Atoi(idParam)
+
+	if err != nil {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+
+	var updated models.SolicitudTutoria
+
+	err = json.NewDecoder(r.Body).Decode(&updated)
+
+	if err != nil {
+		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+		return
+	}
+
+	for i, solicitud := range storage.SolicitudesTutoria {
+
+		if solicitud.ID == id {
+			updated.ID = id
+			storage.SolicitudesTutoria[i] = updated
+
+			json.NewEncoder(w).Encode(updated)
+			return
+		}
+	}
+
+	http.Error(w, "Solicitud no encontrada", http.StatusNotFound)
+}
