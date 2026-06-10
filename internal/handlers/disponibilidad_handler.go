@@ -73,6 +73,7 @@ func GetDisponibilidadByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateDisponibilidad(w http.ResponseWriter, r *http.Request) {
+
 	idParam := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -80,9 +81,25 @@ func UpdateDisponibilidad(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var updated models.DisponibilidadDocente
+
 	err = json.NewDecoder(r.Body).Decode(&updated)
+
 	if err != nil {
 		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+		return
+	}
+
+	// Validaciones
+	if updated.Materia == "" {
+		http.Error(w, "La materia es obligatoria", http.StatusBadRequest)
+		return
+	}
+	if updated.Cupos <= 0 {
+		http.Error(w, "Los cupos deben ser mayores a cero", http.StatusBadRequest)
+		return
+	}
+	if updated.DocenteID <= 0 {
+		http.Error(w, "El ID del docente es obligatorio", http.StatusBadRequest)
 		return
 	}
 	for i, disponibilidad := range storage.Disponibilidades {
