@@ -21,7 +21,8 @@ func main() {
 
 	// Rutas para Solicitudes de Tutoría
 	r.Post("/api/v1/solicitudes-tutoria", handlers.CreateSolicitudTutoria)
-	r.Get("/api/v1/solicitudes-tutoria", handlers.SolicitudesTutoria)
+	r.Get("/api/v1/solicitudes-tutoria", handlers.GetSolicitudesTutoria)
+	r.Get("/api/v1/solicitudes/{id}", handlers.GetSolicitudByID)
 
 	fmt.Println("Servidor ejecutándose en http://localhost:8080")
 
