@@ -127,8 +127,11 @@ func DeleteDisponibilidad(w http.ResponseWriter, r *http.Request) {
 				storage.Disponibilidades[:i],
 				storage.Disponibilidades[i+1:]...,
 			)
+			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("Disponibilidad eliminada"))
+			json.NewEncoder(w).Encode(map[string]string{
+				"mensaje": "Disponibilidad eliminada correctamente",
+			})
 			return
 		}
 	}
