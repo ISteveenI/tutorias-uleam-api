@@ -30,3 +30,8 @@ func CreateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(solicitud)
 }
+
+func SolicitudesTutoria(w http.ResponseWriter, r *http.Request) {
+
+	json.NewEncoder(w).Encode(storage.SolicitudesTutoria)
+}
