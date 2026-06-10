@@ -95,3 +95,31 @@ func UpdateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 
 	http.Error(w, "Solicitud no encontrada", http.StatusNotFound)
 }
+
+func DeleteSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
+
+	idParam := chi.URLParam(r, "id")
+
+	id, err := strconv.Atoi(idParam)
+
+	if err != nil {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+
+	for i, solicitud := range storage.SolicitudesTutoria {
+
+		if solicitud.ID == id {
+			storage.SolicitudesTutoria = append(
+				storage.SolicitudesTutoria[:i],
+				storage.SolicitudesTutoria[i+1:]...,
+			)
+
+			w.WriteHeader(http.StatusNoContent)
+			w.Write([]byte("Solicitud eliminada"))
+			return
+		}
+	}
+
+	http.Error(w, "Solicitud no encontrada", http.StatusNotFound)
+}

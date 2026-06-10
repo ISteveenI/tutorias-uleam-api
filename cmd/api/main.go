@@ -24,6 +24,7 @@ func main() {
 	r.Get("/api/v1/solicitudes-tutoria", handlers.GetSolicitudesTutoria)
 	r.Get("/api/v1/solicitudes/{id}", handlers.GetSolicitudByID)
 	r.Put("/api/v1/solicitudes/{id}", handlers.UpdateSolicitudTutoria)
+	r.Delete("/api/v1/solicitudes/{id}", handlers.DeleteSolicitudTutoria)
 
 	fmt.Println("Servidor ejecutándose en http://localhost:8080")
 
