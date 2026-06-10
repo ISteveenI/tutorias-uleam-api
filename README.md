@@ -34,3 +34,38 @@ La API permitirá que los docentes registren su disponibilidad, que los estudian
 - Karen Holguín: módulo Disponibilidad Docente.
 - Jorge Mero: módulo Solicitud de Tutoria.
 - Steveen Acosta: módulo Sesiones de Tutoria.
+
+## Módulo Disponibilidad Docente
+
+Este módulo permite registrar y administrar la disponibilidad horaria de los docentes para las tutorías académicas.
+
+### Funcionalidades implementadas
+
+* Registrar disponibilidad docente.
+* Consultar todas las disponibilidades registradas.
+* Consultar disponibilidad por identificador.
+* Actualizar disponibilidad existente.
+* Eliminar disponibilidad registrada.
+* Validar datos obligatorios antes de registrar o actualizar información.
+
+### Endpoints
+
+#### Crear disponibilidad
+
+POST /api/v1/disponibilidades
+
+#### Obtener todas las disponibilidades
+
+GET /api/v1/disponibilidades
+
+#### Obtener disponibilidad por ID
+
+GET /api/v1/disponibilidades/{id}
+
+#### Actualizar disponibilidad
+
+PUT /api/v1/disponibilidades/{id}
+
+#### Eliminar disponibilidad
+
+DELETE /api/v1/disponibilidades/{id}
