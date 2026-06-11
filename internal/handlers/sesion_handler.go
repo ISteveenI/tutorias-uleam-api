@@ -156,5 +156,21 @@ func (h *SesionHandler) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *SesionHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	escribirSesionError(w, http.StatusNotImplemented, "Endpoint Delete pendiente")
+	id, err := obtenerSesionID(r)
+	if err != nil {
+		escribirSesionError(w, http.StatusBadRequest, "ID invalido")
+		return
+	}
+
+	err = h.storage.Delete(id)
+	if err != nil {
+		escribirSesionError(w, http.StatusNotFound, "Sesion no encontrada")
+		return
+	}
+
+	respuesta := map[string]string{
+		"mensaje": "Sesion eliminada correctamente",
+	}
+
+	escribirSesionJSON(w, http.StatusOK, respuesta)
 }
