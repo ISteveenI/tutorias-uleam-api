@@ -22,49 +22,6 @@ func CreateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if solicitud.EstudianteID == 0 {
-		http.Error(w, "Debe indicar un estudiante", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.DocenteID == 0 {
-		http.Error(w, "Debe indicar un docente", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.DisponibilidadID == 0 {
-		http.Error(w, "Debe indicar una disponibilidad", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.Materia == "" {
-		http.Error(w, "Debe indicar una materia", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.Tema == "" {
-		http.Error(w, "Debe indicar un tema", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.Urgencia == "" {
-		http.Error(w, "Debe indicar el nivel de urgencia", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.Modalidad == "" {
-		http.Error(w, "Debe indicar la modalidad", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.Estado == "" {
-		solicitud.Estado = "Pendiente"
-	}
-
-	if solicitud.PrioridadCalculada == 0 {
-		solicitud.PrioridadCalculada = 1
-	}
-
 	solicitud.ID = len(storage.SolicitudesTutoria) + 1
 
 	storage.SolicitudesTutoria = append(
