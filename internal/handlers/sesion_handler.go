@@ -111,7 +111,19 @@ func (h *SesionHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	escribirSesionJSON(w, http.StatusOK, sesiones)
 }
 func (h *SesionHandler) GetByID(w http.ResponseWriter, r *http.Request) {
-	escribirSesionError(w, http.StatusNotImplemented, "Endpoint GetByID pendiente")
+	id, err := obtenerSesionID(r)
+	if err != nil {
+		escribirSesionError(w, http.StatusBadRequest, "ID invalido")
+		return
+	}
+
+	sesion, err := h.storage.GetByID(id)
+	if err != nil {
+		escribirSesionError(w, http.StatusNotFound, "Sesion no encontrada")
+		return
+	}
+
+	escribirSesionJSON(w, http.StatusOK, sesion)
 }
 
 func (h *SesionHandler) Update(w http.ResponseWriter, r *http.Request) {
