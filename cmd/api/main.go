@@ -22,9 +22,9 @@ func main() {
 	// Rutas para Solicitudes de Tutoría
 	r.Post("/api/v1/solicitudes-tutoria", handlers.CreateSolicitudTutoria)
 	r.Get("/api/v1/solicitudes-tutoria", handlers.GetSolicitudesTutoria)
-	r.Get("/api/v1/solicitudes/{id}", handlers.GetSolicitudByID)
-	r.Put("/api/v1/solicitudes/{id}", handlers.UpdateSolicitudTutoria)
-	r.Delete("/api/v1/solicitudes/{id}", handlers.DeleteSolicitudTutoria)
+	r.Get("/api/v1/solicitudes-tutoria/{id}", handlers.GetSolicitudByID)
+	r.Put("/api/v1/solicitudes-tutoria/{id}", handlers.UpdateSolicitudTutoria)
+	r.Delete("/api/v1/solicitudes-tutoria/{id}", handlers.DeleteSolicitudTutoria)
 
 	fmt.Println("Servidor ejecutándose en http://localhost:8080")
 
