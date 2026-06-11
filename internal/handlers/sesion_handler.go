@@ -106,9 +106,10 @@ func (h *SesionHandler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *SesionHandler) GetAll(w http.ResponseWriter, r *http.Request) {
-	escribirSesionError(w, http.StatusNotImplemented, "Endpoint GetAll pendiente")
-}
+	sesiones := h.storage.GetAll()
 
+	escribirSesionJSON(w, http.StatusOK, sesiones)
+}
 func (h *SesionHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	escribirSesionError(w, http.StatusNotImplemented, "Endpoint GetByID pendiente")
 }
