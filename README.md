@@ -79,16 +79,15 @@ DELETE /api/v1/disponibilidades/{id}
 
 ## Módulo Solicitudes de Tutoría
 
-Este módulo permite registrar y administrar las solicitudes de tutoría realizadas por los estudiantes.
+Este módulo permite a los estudiantes registrar solicitudes de tutoria indicando la materia, el tema de consulta, el nivel de urgencia y la modalidad requerida.
 
 ### Funcionalidades implementadas
 
 * Registrar solicitudes de tutoría.
-* Consultar todas las solicitudes registradas.
+* Consultar solicitudes registradas.
 * Consultar una solicitud por identificador.
 * Actualizar información de una solicitud existente.
 * Eliminar solicitudes registradas.
-* Validar datos obligatorios antes de registrar una solicitud.
 
 ### Endpoints
 
