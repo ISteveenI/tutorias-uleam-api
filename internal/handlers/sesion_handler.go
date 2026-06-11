@@ -127,7 +127,32 @@ func (h *SesionHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *SesionHandler) Update(w http.ResponseWriter, r *http.Request) {
-	escribirSesionError(w, http.StatusNotImplemented, "Endpoint Update pendiente")
+	id, err := obtenerSesionID(r)
+	if err != nil {
+		escribirSesionError(w, http.StatusBadRequest, "ID invalido")
+		return
+	}
+
+	var sesion models.SesionTutoria
+
+	err = json.NewDecoder(r.Body).Decode(&sesion)
+	if err != nil {
+		escribirSesionError(w, http.StatusBadRequest, "JSON invalido")
+		return
+	}
+
+	if !validarSesion(sesion) {
+		escribirSesionError(w, http.StatusBadRequest, "Faltan campos obligatorios")
+		return
+	}
+
+	sesionActualizada, err := h.storage.Update(id, sesion)
+	if err != nil {
+		escribirSesionError(w, http.StatusNotFound, "Sesion no encontrada")
+		return
+	}
+
+	escribirSesionJSON(w, http.StatusOK, sesionActualizada)
 }
 
 func (h *SesionHandler) Delete(w http.ResponseWriter, r *http.Request) {
