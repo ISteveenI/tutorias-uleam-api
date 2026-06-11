@@ -87,7 +87,22 @@ func validarSesion(sesion models.SesionTutoria) bool {
 	return true
 }
 func (h *SesionHandler) Create(w http.ResponseWriter, r *http.Request) {
-	escribirSesionError(w, http.StatusNotImplemented, "Endpoint Create pendiente")
+	var sesion models.SesionTutoria
+
+	err := json.NewDecoder(r.Body).Decode(&sesion)
+	if err != nil {
+		escribirSesionError(w, http.StatusBadRequest, "JSON invalido")
+		return
+	}
+
+	if !validarSesion(sesion) {
+		escribirSesionError(w, http.StatusBadRequest, "Faltan campos obligatorios")
+		return
+	}
+
+	sesionCreada := h.storage.Create(sesion)
+
+	escribirSesionJSON(w, http.StatusCreated, sesionCreada)
 }
 
 func (h *SesionHandler) GetAll(w http.ResponseWriter, r *http.Request) {
