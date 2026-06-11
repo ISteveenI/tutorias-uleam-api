@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
+	"github.com/steveenacostapatino/tutorias-uleam-api/internal/models"
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/storage"
 )
 
@@ -50,7 +51,41 @@ func escribirSesionError(w http.ResponseWriter, status int, mensaje string) {
 
 	escribirSesionJSON(w, status, respuesta)
 }
+func validarSesion(sesion models.SesionTutoria) bool {
+	if sesion.SolicitudID == 0 {
+		return false
+	}
 
+	if sesion.DisponibilidadID == 0 {
+		return false
+	}
+
+	if sesion.DocenteID == 0 {
+		return false
+	}
+
+	if sesion.EstudianteID == 0 {
+		return false
+	}
+
+	if sesion.Fecha == "" {
+		return false
+	}
+
+	if sesion.HoraInicio == "" {
+		return false
+	}
+
+	if sesion.HoraFin == "" {
+		return false
+	}
+
+	if sesion.Estado == "" {
+		return false
+	}
+
+	return true
+}
 func (h *SesionHandler) Create(w http.ResponseWriter, r *http.Request) {
 	escribirSesionError(w, http.StatusNotImplemented, "Endpoint Create pendiente")
 }
