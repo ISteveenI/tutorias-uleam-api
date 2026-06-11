@@ -7,11 +7,14 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/handlers"
+	"github.com/steveenacostapatino/tutorias-uleam-api/internal/storage"
 )
 
 func main() {
 
 	r := chi.NewRouter()
+	sesionStorage := storage.NewSesionStorage()
+	sesionHandler := handlers.NewSesionHandler(sesionStorage)
 
 	// Rutas Disponibilidad Docente
 	r.Post("/api/v1/disponibilidades", handlers.CreateDisponibilidad)
@@ -26,6 +29,9 @@ func main() {
 	r.Get("/api/v1/solicitudes/{id}", handlers.GetSolicitudByID)
 	r.Put("/api/v1/solicitudes/{id}", handlers.UpdateSolicitudTutoria)
 	r.Delete("/api/v1/solicitudes/{id}", handlers.DeleteSolicitudTutoria)
+
+	// Rutas Sesiones de Tutoría
+	r.Mount("/api/v1/sesiones-tutoria", sesionHandler.Routes())
 
 	fmt.Println("Servidor ejecutándose en http://localhost:8080")
 
