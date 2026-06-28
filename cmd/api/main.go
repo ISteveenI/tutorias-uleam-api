@@ -17,11 +17,8 @@ func main() {
 	sesionHandler := handlers.NewSesionHandler(sesionStorage)
 
 	// Rutas Disponibilidad Docente
-	r.Post("/api/v1/disponibilidades", handlers.CreateDisponibilidad)
-	r.Get("/api/v1/disponibilidades", handlers.GetDisponibilidades)
-	r.Get("/api/v1/disponibilidades/{id}", handlers.GetDisponibilidadByID)
-	r.Put("/api/v1/disponibilidades/{id}", handlers.UpdateDisponibilidad)
-	r.Delete("/api/v1/disponibilidades/{id}", handlers.DeleteDisponibilidad)
+	
+
 
 	// Rutas Solicitudes de Tutoría
 	r.Post("/api/v1/solicitudes-tutoria", handlers.CreateSolicitudTutoria)
