@@ -76,3 +76,5 @@ func (m *MateriaStorage) Delete(id int) error {
 	delete(m.materias, id)
 	return nil
 }
+
+var MateriaRepo = NewMateriaStorage()

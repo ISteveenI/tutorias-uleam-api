@@ -74,3 +74,5 @@ func (d *DocenteStorage) Delete(id int) error {
 	delete(d.docentes, id)
 	return nil
 }
+
+var DocenteRepo = NewDocenteStorage()

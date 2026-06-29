@@ -98,3 +98,5 @@ func (h *HorarioStorage) Delete(id int) error {
 	delete(h.horarios, id)
 	return nil
 }
+
+var HorarioRepo = NewHorarioStorage()
