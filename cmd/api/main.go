@@ -16,9 +16,31 @@ func main() {
 	sesionStorage := storage.NewSesionStorage()
 	sesionHandler := handlers.NewSesionHandler(sesionStorage)
 
-	// Rutas Disponibilidad Docente
-	
+		// Inicialización storage
+	storage.NewDocenteStorage()
+	storage.NewMateriaStorage()
+	storage.NewHorarioStorage()
 
+	// Rutas Docentes
+	r.Post("/api/v1/docentes",handlers.CreateDocente,)
+	r.Get("/api/v1/docentes",handlers.GetDocentes,)
+	r.Get("/api/v1/docentes/{id}",handlers.GetDocenteByID,)
+	r.Put("/api/v1/docentes/{id}",handlers.UpdateDocente,)
+	r.Delete("/api/v1/docentes/{id}",handlers.DeleteDocente,)
+
+	// Rutas Materias
+	r.Post("/api/v1/materias",handlers.CreateMateria,)
+	r.Get("/api/v1/materias",handlers.GetMaterias,)
+	r.Get("/api/v1/materias/{id}",handlers.GetMateriaByID,)
+	r.Put("/api/v1/materias/{id}",handlers.UpdateMateria,)
+	r.Delete("/api/v1/materias/{id}",handlers.DeleteMateria,)
+
+	// Rutas Horarios Docente
+	r.Post("/api/v1/horarios-docente",handlers.CreateHorario,)
+	r.Get("/api/v1/horarios-docente",handlers.GetHorarios,)
+	r.Get("/api/v1/horarios-docente/{id}",handlers.GetHorarioByID,)
+	r.Put("/api/v1/horarios-docente/{id}",handlers.UpdateHorario,)
+	r.Delete("/api/v1/horarios-docente/{id}",handlers.DeleteHorario,)
 
 	// Rutas Solicitudes de Tutoría
 	r.Post("/api/v1/solicitudes-tutoria", handlers.CreateSolicitudTutoria)
