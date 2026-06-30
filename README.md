@@ -26,7 +26,6 @@ Entidades:
 - Materia
 - HorarioDocente
 
-
 ### 2. Módulo Solicitudes de Tutoría
 
 Gestiona las solicitudes realizadas por estudiantes.
@@ -37,7 +36,6 @@ Entidades:
 - TipoTutoria
 - SolicitudTutoria
 
-
 ### 3. Módulo Sesiones de Tutoría
 
 Gestiona las tutorías confirmadas, asistencia y evidencias generadas.
@@ -47,7 +45,6 @@ Entidades:
 - SesionTutoria
 - Asistencia
 - Evidencia
-
 
 ## Stack tecnológico
 
@@ -61,13 +58,11 @@ Entidades:
 - PostgreSQL para producción
 - GitHub Actions
 
-
 ## Integrantes y módulos
 
 - Steveen Acosta: estructura inicial del proyecto y módulo Sesiones de Tutoría.
 - Karen Holguín: módulo Docentes.
 - Jorge Mero: módulo Solicitudes de Tutoría.
-
 
 # Módulo Docentes
 
@@ -90,7 +85,6 @@ Campos principales:
 - especialidad
 - título académico
 
-
 ### Materia
 
 Permite gestionar las asignaturas relacionadas con las tutorías.
@@ -101,7 +95,6 @@ Campos principales:
 - nombre
 - código
 - descripción
-
 
 ### HorarioDocente
 
@@ -118,7 +111,6 @@ Campos principales:
 - modalidad
 - aula
 
-
 ## Funcionalidades implementadas
 
 - Registrar docentes.
@@ -130,7 +122,6 @@ Campos principales:
 - Registrar horarios docentes.
 - Consultar horarios disponibles.
 
-
 ## Endpoints
 
 ### Docentes
@@ -139,27 +130,21 @@ POST
 
 /api/v1/docentes
 
-
 GET
 
 /api/v1/docentes
-
 
 GET por ID
 
 /api/v1/docentes/{id}
 
-
 PUT
 
 /api/v1/docentes/{id}
 
-
 DELETE
 
 /api/v1/docentes/{id}
-
-
 
 ### Materias
 
@@ -167,12 +152,9 @@ POST
 
 /api/v1/materias
 
-
 GET
 
 /api/v1/materias
-
-
 
 ### Horarios
 
@@ -180,12 +162,44 @@ POST
 
 /api/v1/horarios
 
-
 GET
 
 /api/v1/horarios
 
-
 ## Regla de negocio
 
 Un docente no puede registrar dos horarios de tutoría que se crucen en el mismo día y rango de horas.
+
+# Módulo Solicitudes de Tutoría
+
+Este módulo permite a los estudiantes registrar solicitudes de tutoría indicando la materia, el tema de consulta, el nivel de urgencia y la modalidad requerida.
+
+## Funcionalidades implementadas
+
+- Registrar solicitudes de tutoría.
+- Consultar solicitudes registradas.
+- Consultar una solicitud por identificador.
+- Actualizar información de una solicitud existente.
+- Eliminar solicitudes registradas.
+
+## Endpoints
+
+### Crear solicitud
+
+POST /api/v1/solicitudes-tutoria
+
+### Obtener todas las solicitudes
+
+GET /api/v1/solicitudes-tutoria
+
+### Obtener solicitud por ID
+
+GET /api/v1/solicitudes-tutoria/{id}
+
+### Actualizar solicitud
+
+PUT /api/v1/solicitudes-tutoria/{id}
+
+### Eliminar solicitud
+
+DELETE /api/v1/solicitudes-tutoria/{id}
