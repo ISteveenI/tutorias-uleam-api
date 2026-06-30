@@ -1,20 +1,50 @@
 # API Backend para Gestión de Tutorías Académicas ULEAM
 
-Este proyecto consiste en una API REST desarrollada en Go para gestionar turnos de tutorías académicas entre estudiantes y docentes de la Universidad Laica Eloy Alfaro de Manabí.
+Este proyecto consiste en una API REST desarrollada en Go para gestionar tutorías académicas entre estudiantes y docentes de la Universidad Laica Eloy Alfaro de Manabí.
 
 ## Problema
 
-La coordinación de tutorías académicas puede realizarse por mensajes, conversaciones presenciales o acuerdos verbales, lo que puede generar confusión sobre horarios, temas, confirmaciones y reprogramaciones.
+Actualmente la coordinación de tutorías académicas puede realizarse mediante mensajes, conversaciones presenciales o acuerdos verbales, generando problemas como confusión de horarios, falta de seguimiento de solicitudes, dificultad para organizar sesiones y pérdida de evidencias de las tutorías realizadas.
 
 ## Solución
 
-La API permitirá que los docentes registren su disponibilidad, que los estudiantes soliciten tutorías indicando materia, tema, urgencia y modalidad, y que el sistema gestione sesiones confirmadas evitando cruces de horario.
+La API permitirá gestionar el proceso completo de tutorías académicas mediante módulos independientes:
+
+- Los docentes podrán registrar sus materias y horarios disponibles.
+- Los estudiantes podrán solicitar tutorías indicando el tema a tratar y tipo de tutoría.
+- El sistema permitirá gestionar sesiones realizadas, asistencia y evidencias.
 
 ## Módulos
 
-1. Disponibilidad Docente
-2. Solicitudes de Tutoría
-3. Sesiones de Tutoría
+### 1. Módulo Docentes
+
+Gestiona la información de los docentes, materias asignadas y horarios disponibles para tutorías.
+
+Entidades:
+
+- Docente
+- Materia
+- HorarioDocente
+
+### 2. Módulo Solicitudes de Tutoría
+
+Gestiona las solicitudes realizadas por estudiantes.
+
+Entidades:
+
+- Estudiante
+- TipoTutoria
+- SolicitudTutoria
+
+### 3. Módulo Sesiones de Tutoría
+
+Gestiona las tutorías confirmadas, asistencia y evidencias generadas.
+
+Entidades:
+
+- SesionTutoria
+- Asistencia
+- Evidencia
 
 ## Stack tecnológico
 
@@ -30,84 +60,146 @@ La API permitirá que los docentes registren su disponibilidad, que los estudian
 
 ## Integrantes y módulos
 
-- Steveen Acosta: estructura inicial del proyecto.
-- Karen Holguín: módulo Disponibilidad Docente.
+- Steveen Acosta: estructura inicial del proyecto y módulo Sesiones de Tutoría.
+- Karen Holguín: módulo Docentes.
 - Jorge Mero: módulo Solicitudes de Tutoría.
-- Steveen Acosta módulo Sesiones de Tutoría.
 
+# Módulo Docentes
 
-## Módulo Disponibilidad Docente
+Este módulo permite administrar la información relacionada con los docentes, materias y horarios destinados para la gestión de tutorías académicas.
 
-Este módulo permite registrar y administrar la disponibilidad horaria de los docentes para las tutorías académicas.
+## Entidades implementadas
 
-### Funcionalidades implementadas
+### Docente
 
-* Registrar disponibilidad docente.
+Permite registrar la información del docente encargado de brindar tutorías.
 
-* Consultar todas las disponibilidades registradas.
+Campos principales:
 
-* Consultar disponibilidad por identificador.
+- id
+- nombres
+- apellidos
+- correo
+- teléfono
+- departamento
+- especialidad
+- título académico
 
-* Actualizar disponibilidad existente.
+### Materia
 
-* Eliminar disponibilidad registrada.
+Permite gestionar las asignaturas relacionadas con las tutorías.
 
-* Validar datos obligatorios antes de registrar o actualizar información.
+Campos principales:
 
-### Endpoints
+- id
+- nombre
+- código
+- descripción
 
-#### Crear disponibilidad
+### HorarioDocente
 
-POST /api/v1/disponibilidades
+Permite registrar los horarios disponibles de cada docente asociados a una materia.
 
-#### Obtener todas las disponibilidades
+Campos principales:
 
-GET /api/v1/disponibilidades
+- id
+- docente_id
+- materia_id
+- día_semana
+- hora_inicio
+- hora_fin
+- modalidad
+- aula
 
-#### Obtener disponibilidad por ID
+## Funcionalidades implementadas
 
-GET /api/v1/disponibilidades/{id}
+- Registrar docentes.
+- Consultar docentes.
+- Actualizar información de docentes.
+- Eliminar docentes.
+- Registrar materias.
+- Consultar materias.
+- Registrar horarios docentes.
+- Consultar horarios disponibles.
 
-#### Actualizar disponibilidad
+## Endpoints
 
-PUT /api/v1/disponibilidades/{id}
+### Docentes
 
-#### Eliminar disponibilidad
+POST
 
-DELETE /api/v1/disponibilidades/{id}
+/api/v1/docentes
 
+GET
 
-## Módulo Solicitudes de Tutoría
+/api/v1/docentes
 
-Este módulo permite a los estudiantes registrar solicitudes de tutoria indicando la materia, el tema de consulta, el nivel de urgencia y la modalidad requerida.
+GET por ID
 
-### Funcionalidades implementadas
+/api/v1/docentes/{id}
 
-* Registrar solicitudes de tutoría.
-* Consultar solicitudes registradas.
-* Consultar una solicitud por identificador.
-* Actualizar información de una solicitud existente.
-* Eliminar solicitudes registradas.
+PUT
 
-### Endpoints
+/api/v1/docentes/{id}
 
-#### Crear solicitud
+DELETE
+
+/api/v1/docentes/{id}
+
+### Materias
+
+POST
+
+/api/v1/materias
+
+GET
+
+/api/v1/materias
+
+### Horarios
+
+POST
+
+/api/v1/horarios
+
+GET
+
+/api/v1/horarios
+
+## Regla de negocio
+
+Un docente no puede registrar dos horarios de tutoría que se crucen en el mismo día y rango de horas.
+
+# Módulo Solicitudes de Tutoría
+
+Este módulo permite a los estudiantes registrar solicitudes de tutoría indicando la materia, el tema de consulta, el nivel de urgencia y la modalidad requerida.
+
+## Funcionalidades implementadas
+
+- Registrar solicitudes de tutoría.
+- Consultar solicitudes registradas.
+- Consultar una solicitud por identificador.
+- Actualizar información de una solicitud existente.
+- Eliminar solicitudes registradas.
+
+## Endpoints
+
+### Crear solicitud
 
 POST /api/v1/solicitudes-tutoria
 
-#### Obtener todas las solicitudes
+### Obtener todas las solicitudes
 
 GET /api/v1/solicitudes-tutoria
 
-#### Obtener solicitud por ID
+### Obtener solicitud por ID
 
 GET /api/v1/solicitudes-tutoria/{id}
 
-#### Actualizar solicitud
+### Actualizar solicitud
 
 PUT /api/v1/solicitudes-tutoria/{id}
 
-#### Eliminar solicitud
+### Eliminar solicitud
 
 DELETE /api/v1/solicitudes-tutoria/{id}
-
