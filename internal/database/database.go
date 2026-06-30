@@ -1,8 +1,8 @@
 package database
 
 import (
+	"github.com/glebarez/sqlite"
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/models"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
