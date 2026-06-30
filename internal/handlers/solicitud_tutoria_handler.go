@@ -11,6 +11,9 @@ import (
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/storage"
 )
 
+var SolicitudesTutoria = storage.NewSolicitudTutoriaStorage()
+
+// Crea una nueva solicitud de tutoría.
 func CreateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 
 	var solicitud models.SolicitudTutoria
@@ -22,38 +25,29 @@ func CreateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if solicitud.EstudianteID == 0 {
-		http.Error(w, "Debe indicar un estudiante", http.StatusBadRequest)
+	// Validaciones
+	if solicitud.EstudianteID <= 0 {
+		http.Error(w, "El estudiante es obligatorio", http.StatusBadRequest)
 		return
 	}
 
-	if solicitud.DocenteID == 0 {
-		http.Error(w, "Debe indicar un docente", http.StatusBadRequest)
+	if solicitud.HorarioDocenteID <= 0 {
+		http.Error(w, "El horario docente es obligatorio", http.StatusBadRequest)
 		return
 	}
 
-	if solicitud.DisponibilidadID == 0 {
-		http.Error(w, "Debe indicar una disponibilidad", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.Materia == "" {
-		http.Error(w, "Debe indicar una materia", http.StatusBadRequest)
+	if solicitud.TipoTutoriaID <= 0 {
+		http.Error(w, "El tipo de tutoría es obligatorio", http.StatusBadRequest)
 		return
 	}
 
 	if solicitud.Tema == "" {
-		http.Error(w, "Debe indicar un tema", http.StatusBadRequest)
+		http.Error(w, "El tema es obligatorio", http.StatusBadRequest)
 		return
 	}
 
-	if solicitud.Urgencia == "" {
-		http.Error(w, "Debe indicar el nivel de urgencia", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.Modalidad == "" {
-		http.Error(w, "Debe indicar la modalidad", http.StatusBadRequest)
+	if solicitud.FechaSolicitud == "" {
+		http.Error(w, "La fecha de la solicitud es obligatoria", http.StatusBadRequest)
 		return
 	}
 
@@ -61,27 +55,23 @@ func CreateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 		solicitud.Estado = "Pendiente"
 	}
 
-	if solicitud.PrioridadCalculada == 0 {
-		solicitud.PrioridadCalculada = 1
-	}
+	solicitud = SolicitudesTutoria.Create(solicitud)
 
-	solicitud.ID = len(storage.SolicitudesTutoria) + 1
-
-	storage.SolicitudesTutoria = append(
-		storage.SolicitudesTutoria,
-		solicitud,
-	)
-
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 
 	json.NewEncoder(w).Encode(solicitud)
 }
 
+// Obtiene todas las solicitudes de tutoría.
 func GetSolicitudesTutoria(w http.ResponseWriter, r *http.Request) {
 
-	json.NewEncoder(w).Encode(storage.SolicitudesTutoria)
+	w.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(SolicitudesTutoria.GetAll())
 }
 
+// Obtiene una solicitud por ID.
 func GetSolicitudByID(w http.ResponseWriter, r *http.Request) {
 
 	idParam := chi.URLParam(r, "id")
@@ -93,18 +83,19 @@ func GetSolicitudByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, solicitud := range storage.SolicitudesTutoria {
+	solicitud, err := SolicitudesTutoria.GetByID(id)
 
-		if solicitud.ID == id {
-
-			json.NewEncoder(w).Encode(solicitud)
-			return
-		}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
 	}
 
-	http.Error(w, "Solicitud no encontrada", http.StatusNotFound)
+	w.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(solicitud)
 }
 
+// Actualiza una solicitud de tutoría.
 func UpdateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 
 	idParam := chi.URLParam(r, "id")
@@ -116,29 +107,48 @@ func UpdateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var updated models.SolicitudTutoria
+	var solicitud models.SolicitudTutoria
 
-	err = json.NewDecoder(r.Body).Decode(&updated)
+	err = json.NewDecoder(r.Body).Decode(&solicitud)
 
 	if err != nil {
 		http.Error(w, "Datos inválidos", http.StatusBadRequest)
 		return
 	}
 
-	for i, solicitud := range storage.SolicitudesTutoria {
-
-		if solicitud.ID == id {
-			updated.ID = id
-			storage.SolicitudesTutoria[i] = updated
-
-			json.NewEncoder(w).Encode(updated)
-			return
-		}
+	if solicitud.EstudianteID <= 0 {
+		http.Error(w, "El estudiante es obligatorio", http.StatusBadRequest)
+		return
 	}
 
-	http.Error(w, "Solicitud no encontrada", http.StatusNotFound)
+	if solicitud.HorarioDocenteID <= 0 {
+		http.Error(w, "El horario docente es obligatorio", http.StatusBadRequest)
+		return
+	}
+
+	if solicitud.TipoTutoriaID <= 0 {
+		http.Error(w, "El tipo de tutoría es obligatorio", http.StatusBadRequest)
+		return
+	}
+
+	if solicitud.Tema == "" {
+		http.Error(w, "El tema es obligatorio", http.StatusBadRequest)
+		return
+	}
+
+	actualizada, err := SolicitudesTutoria.Update(id, solicitud)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(actualizada)
 }
 
+// Elimina una solicitud de tutoría.
 func DeleteSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 
 	idParam := chi.URLParam(r, "id")
@@ -150,19 +160,17 @@ func DeleteSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for i, solicitud := range storage.SolicitudesTutoria {
+	err = SolicitudesTutoria.Delete(id)
 
-		if solicitud.ID == id {
-			storage.SolicitudesTutoria = append(
-				storage.SolicitudesTutoria[:i],
-				storage.SolicitudesTutoria[i+1:]...,
-			)
-
-			w.WriteHeader(http.StatusNoContent)
-			w.Write([]byte("Solicitud eliminada"))
-			return
-		}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
 	}
 
-	http.Error(w, "Solicitud no encontrada", http.StatusNotFound)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(w).Encode(map[string]string{
+		"mensaje": "Solicitud de tutoría eliminada correctamente",
+	})
 }
