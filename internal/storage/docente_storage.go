@@ -25,8 +25,8 @@ func (d *DocenteStorage) Create(docente models.Docente) models.Docente {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	docente.ID = d.nextID
-	d.docentes[docente.ID] = docente
+	docente.ID = uint(d.nextID)
+	d.docentes[d.nextID] = docente
 	d.nextID++
 	return docente
 }
@@ -58,7 +58,7 @@ func (d *DocenteStorage) Update(id int,docente models.Docente,) (models.Docente,
 	if !exists {
 		return models.Docente{}, errors.New("docente no encontrado")
 	}
-	docente.ID = id
+	docente.ID = uint(id)
 	d.docentes[id] = docente
 	return docente, nil
 }

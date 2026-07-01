@@ -23,6 +23,10 @@ func main() {
 	sesionService := services.NewSesionService(sesionRepo)
 	sesionHandler := handlers.NewSesionHandler(sesionService)
 
+	docenteRepo := repositories.NewGormDocenteRepository(db)
+	docenteService := services.NewDocenteService(docenteRepo)
+	docenteHandler := handlers.NewDocenteHandler(docenteService)
+
 	r := chi.NewRouter()
 
 	// Inicialización storage
@@ -31,11 +35,7 @@ func main() {
 	storage.NewHorarioStorage()
 
 	// Rutas Docentes
-	r.Post("/api/v1/docentes", handlers.CreateDocente)
-	r.Get("/api/v1/docentes", handlers.GetDocentes)
-	r.Get("/api/v1/docentes/{id}", handlers.GetDocenteByID)
-	r.Put("/api/v1/docentes/{id}", handlers.UpdateDocente)
-	r.Delete("/api/v1/docentes/{id}", handlers.DeleteDocente)
+	r.Mount("/api/v1/docentes", docenteHandler.Routes())
 
 	// Rutas Materias
 	r.Post("/api/v1/materias", handlers.CreateMateria)

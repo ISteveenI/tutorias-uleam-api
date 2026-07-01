@@ -2,162 +2,177 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-
+	"github.com/steveenacostapatino/tutorias-uleam-api/internal/middlewares"
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/models"
-	"github.com/steveenacostapatino/tutorias-uleam-api/internal/storage"
+	"github.com/steveenacostapatino/tutorias-uleam-api/internal/repositories"
+	"github.com/steveenacostapatino/tutorias-uleam-api/internal/services"
 )
 
-// Crear docente
-func CreateDocente(w http.ResponseWriter, r *http.Request) {
+type DocenteHandler struct {
+	service services.DocenteServiceInterface
+}
+
+func NewDocenteHandler(service services.DocenteServiceInterface) *DocenteHandler {
+	return &DocenteHandler{
+		service: service,
+	}
+}
+
+func (h *DocenteHandler) Routes() chi.Router {
+
+	r := chi.NewRouter()
+
+	r.Get("/", h.GetAll)
+	r.Get("/{id}", h.GetByID)
+
+	r.Group(func(protegida chi.Router) {
+
+		protegida.Use(middlewares.RequireAuth)
+
+		protegida.Post("/", h.Create)
+		protegida.Put("/{id}", h.Update)
+		protegida.Delete("/{id}", h.Delete)
+
+	})
+
+	return r
+}
+
+func (h *DocenteHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	var docente models.Docente
 
-	err := json.NewDecoder(r.Body).Decode(&docente)
-
-	if err != nil {
-		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+	if err := json.NewDecoder(r.Body).Decode(&docente); err != nil {
+		escribirDocenteError(w, http.StatusBadRequest, "JSON invalido")
 		return
 	}
 
-	// VALIDACIONES
-	if docente.Nombres == "" {
-		http.Error(w, "Nombres obligatorios", http.StatusBadRequest)
+	if err := h.service.Create(r.Context(), &docente); err != nil {
+		manejarErrorDocente(w, err)
 		return
 	}
 
-	if docente.Apellidos == "" {
-		http.Error(w, "Apellidos obligatorios", http.StatusBadRequest)
-		return
-	}
-
-	if docente.Correo == "" {
-		http.Error(w, "Correo obligatorio", http.StatusBadRequest)
-		return
-	}
-
-	if docente.Departamento == "" {
-		http.Error(w, "Departamento obligatorio", http.StatusBadRequest)
-		return
-	}
-
-	if docente.Especialidad == "" {
-		http.Error(w, "Especialidad obligatoria", http.StatusBadRequest)
-		return
-	}
-
-	// CREAR
-	docente = storage.DocenteRepo.Create(docente)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-
-	json.NewEncoder(w).Encode(docente)
+	escribirDocenteJSON(w, http.StatusCreated, docente)
 }
 
-// Obtener todos los docentes
-func GetDocentes(w http.ResponseWriter, r *http.Request) {
+func (h *DocenteHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 
-	docentes := storage.DocenteRepo.GetAll()
-
-	w.Header().Set("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(docentes)
-}
-
-// Obtener docente por ID
-func GetDocenteByID(w http.ResponseWriter, r *http.Request) {
-
-	idStr := chi.URLParam(r, "id")
-
-	id, err := strconv.Atoi(idStr)
+	docentes, err := h.service.GetAll(r.Context())
 
 	if err != nil {
-		http.Error(w, "ID inválido", http.StatusBadRequest)
+		escribirDocenteError(w, http.StatusInternalServerError, "No se pudieron obtener los docentes")
 		return
 	}
 
-	docente, err := storage.DocenteRepo.GetByID(id)
+	escribirDocenteJSON(w, http.StatusOK, docentes)
+}
+
+func (h *DocenteHandler) GetByID(w http.ResponseWriter, r *http.Request) {
+
+	id, err := obtenerDocenteID(r)
 
 	if err != nil {
-		http.Error(w, "Docente no encontrado", http.StatusNotFound)
+		escribirDocenteError(w, http.StatusBadRequest, "ID invalido")
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(docente)
-}
-
-// Actualizar docente
-func UpdateDocente(w http.ResponseWriter, r *http.Request) {
-
-	idStr := chi.URLParam(r, "id")
-
-	id, err := strconv.Atoi(idStr)
+	docente, err := h.service.GetByID(r.Context(), id)
 
 	if err != nil {
-		http.Error(w, "ID inválido", http.StatusBadRequest)
+		manejarErrorDocente(w, err)
+		return
+	}
+
+	escribirDocenteJSON(w, http.StatusOK, docente)
+}
+
+func (h *DocenteHandler) Update(w http.ResponseWriter, r *http.Request) {
+
+	id, err := obtenerDocenteID(r)
+
+	if err != nil {
+		escribirDocenteError(w, http.StatusBadRequest, "ID invalido")
 		return
 	}
 
 	var docente models.Docente
 
-	err = json.NewDecoder(r.Body).Decode(&docente)
-
-	if err != nil {
-		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+	if err := json.NewDecoder(r.Body).Decode(&docente); err != nil {
+		escribirDocenteError(w, http.StatusBadRequest, "JSON invalido")
 		return
 	}
 
-	// VALIDACIONES
-	if docente.Nombres == "" {
-		http.Error(w, "Nombres obligatorios", http.StatusBadRequest)
+	if err := h.service.Update(r.Context(), id, &docente); err != nil {
+		manejarErrorDocente(w, err)
 		return
 	}
 
-	if docente.Correo == "" {
-		http.Error(w, "Correo obligatorio", http.StatusBadRequest)
-		return
-	}
-
-	updated, err := storage.DocenteRepo.Update(id, docente)
-
-	if err != nil {
-		http.Error(w, "Docente no encontrado", http.StatusNotFound)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(updated)
+	escribirDocenteJSON(w, http.StatusOK, docente)
 }
 
-// Eliminar docente
-func DeleteDocente(w http.ResponseWriter, r *http.Request) {
+func (h *DocenteHandler) Delete(w http.ResponseWriter, r *http.Request) {
 
-	idStr := chi.URLParam(r, "id")
-
-	id, err := strconv.Atoi(idStr)
+	id, err := obtenerDocenteID(r)
 
 	if err != nil {
-		http.Error(w, "ID inválido", http.StatusBadRequest)
+		escribirDocenteError(w, http.StatusBadRequest, "ID invalido")
 		return
 	}
 
-	err = storage.DocenteRepo.Delete(id)
-
-	if err != nil {
-		http.Error(w, "Docente no encontrado", http.StatusNotFound)
+	if err := h.service.Delete(r.Context(), id); err != nil {
+		manejarErrorDocente(w, err)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(map[string]string{
+	escribirDocenteJSON(w, http.StatusOK, map[string]string{
 		"mensaje": "Docente eliminado correctamente",
 	})
+}
+
+func obtenerDocenteID(r *http.Request) (uint, error) {
+
+	idParam := chi.URLParam(r, "id")
+
+	id, err := strconv.ParseUint(idParam, 10, 64)
+
+	return uint(id), err
+}
+
+func escribirDocenteJSON(w http.ResponseWriter, status int, data any) {
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+
+	json.NewEncoder(w).Encode(data)
+}
+
+func escribirDocenteError(w http.ResponseWriter, status int, mensaje string) {
+
+	escribirDocenteJSON(w, status, map[string]string{
+		"error": mensaje,
+	})
+}
+
+func manejarErrorDocente(w http.ResponseWriter, err error) {
+
+	if errors.Is(err, services.ErrDatosInvalidos) {
+
+		escribirDocenteError(w, http.StatusBadRequest, "Datos invalidos")
+		return
+
+	}
+
+	if errors.Is(err, repositories.ErrDocenteNoEncontrado) {
+
+		escribirDocenteError(w, http.StatusNotFound, "Docente no encontrado")
+		return
+
+	}
+
+	escribirDocenteError(w, http.StatusInternalServerError, "Error interno del servidor")
 }

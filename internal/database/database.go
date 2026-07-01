@@ -13,6 +13,7 @@ func ConnectSQLite(path string) (*gorm.DB, error) {
 	}
 
 	err = db.AutoMigrate(
+		&models.Docente{},
 		&models.SesionTutoria{},
 		&models.Asistencia{},
 		&models.Evidencia{},
