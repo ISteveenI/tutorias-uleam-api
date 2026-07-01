@@ -13,10 +13,7 @@ func ConnectSQLite(path string) (*gorm.DB, error) {
 	}
 
 	err = db.AutoMigrate(
-<<<<<<< Updated upstream
-=======
-		// Modulo Sesiones
->>>>>>> Stashed changes
+
 		&models.Docente{},
 		&models.SesionTutoria{},
 		&models.Asistencia{},
