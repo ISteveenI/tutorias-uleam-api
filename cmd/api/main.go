@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/database"
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/handlers"
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/repositories"
@@ -13,23 +14,31 @@ import (
 )
 
 func main() {
+
 	db, err := database.ConnectSQLite("tutorias.db")
 	if err != nil {
 		fmt.Println("Error al conectar la base de datos:", err)
 		return
 	}
 
+	// Sesiones
 	sesionRepo := repositories.NewGormSesionRepository(db)
 	sesionService := services.NewSesionService(sesionRepo)
 	sesionHandler := handlers.NewSesionHandler(sesionService)
 
+	// Docentes
 	docenteRepo := repositories.NewGormDocenteRepository(db)
 	docenteService := services.NewDocenteService(docenteRepo)
 	docenteHandler := handlers.NewDocenteHandler(docenteService)
 
+	// Solicitudes
+	solicitudRepo := repositories.NewGormSolicitudTutoriaRepository(db)
+	solicitudService := services.NewSolicitudTutoriaService(solicitudRepo)
+	solicitudHandler := handlers.NewSolicitudTutoriaHandler(solicitudService)
+
 	r := chi.NewRouter()
 
-	// Inicialización storage
+	// Storage de módulos antiguos
 	storage.NewDocenteStorage()
 	storage.NewMateriaStorage()
 	storage.NewHorarioStorage()
@@ -50,7 +59,7 @@ func main() {
 	r.Get("/api/v1/horarios-docente/{id}", handlers.GetHorarioByID)
 	r.Put("/api/v1/horarios-docente/{id}", handlers.UpdateHorario)
 	r.Delete("/api/v1/horarios-docente/{id}", handlers.DeleteHorario)
-
+	
 	// Rutas Estudiantes
 	r.Post("/api/v1/estudiantes", handlers.CreateEstudiante)
 	r.Get("/api/v1/estudiantes", handlers.GetEstudiantes)
