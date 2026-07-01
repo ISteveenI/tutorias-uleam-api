@@ -8,24 +8,23 @@ import (
 )
 
 type TipoTutoriaStorage struct {
-	mu            sync.Mutex
-	tiposTutoria  map[int]models.TipoTutoria
-	nextID        int
+	mu           sync.Mutex
+	tiposTutoria map[uint]models.TipoTutoria
+	nextID       int
 }
 
 func NewTipoTutoriaStorage() *TipoTutoriaStorage {
 	return &TipoTutoriaStorage{
-		tiposTutoria: make(map[int]models.TipoTutoria),
+		tiposTutoria: make(map[uint]models.TipoTutoria),
 		nextID:       1,
 	}
 }
 
 func (t *TipoTutoriaStorage) Create(tipo models.TipoTutoria) models.TipoTutoria {
-
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	tipo.ID = t.nextID
+	tipo.ID = uint(t.nextID)
 	t.tiposTutoria[tipo.ID] = tipo
 	t.nextID++
 
@@ -33,7 +32,6 @@ func (t *TipoTutoriaStorage) Create(tipo models.TipoTutoria) models.TipoTutoria 
 }
 
 func (t *TipoTutoriaStorage) GetAll() []models.TipoTutoria {
-
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
@@ -46,13 +44,11 @@ func (t *TipoTutoriaStorage) GetAll() []models.TipoTutoria {
 	return lista
 }
 
-func (t *TipoTutoriaStorage) GetByID(id int) (models.TipoTutoria, error) {
-
+func (t *TipoTutoriaStorage) GetByID(id uint) (models.TipoTutoria, error) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
 	tipo, exists := t.tiposTutoria[id]
-
 	if !exists {
 		return models.TipoTutoria{}, errors.New("tipo de tutoría no encontrado")
 	}
@@ -60,16 +56,11 @@ func (t *TipoTutoriaStorage) GetByID(id int) (models.TipoTutoria, error) {
 	return tipo, nil
 }
 
-func (t *TipoTutoriaStorage) Update(
-	id int,
-	tipo models.TipoTutoria,
-) (models.TipoTutoria, error) {
-
+func (t *TipoTutoriaStorage) Update(id uint, tipo models.TipoTutoria) (models.TipoTutoria, error) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
 	_, exists := t.tiposTutoria[id]
-
 	if !exists {
 		return models.TipoTutoria{}, errors.New("tipo de tutoría no encontrado")
 	}
@@ -80,13 +71,11 @@ func (t *TipoTutoriaStorage) Update(
 	return tipo, nil
 }
 
-func (t *TipoTutoriaStorage) Delete(id int) error {
-
+func (t *TipoTutoriaStorage) Delete(id uint) error {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
 	_, exists := t.tiposTutoria[id]
-
 	if !exists {
 		return errors.New("tipo de tutoría no encontrado")
 	}

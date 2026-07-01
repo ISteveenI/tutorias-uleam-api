@@ -9,13 +9,13 @@ import (
 
 type SolicitudTutoriaStorage struct {
 	mu           sync.Mutex
-	solicitudes  map[int]models.SolicitudTutoria
+	solicitudes  map[uint]models.SolicitudTutoria
 	nextID       int
 }
 
 func NewSolicitudTutoriaStorage() *SolicitudTutoriaStorage {
 	return &SolicitudTutoriaStorage{
-		solicitudes: make(map[int]models.SolicitudTutoria),
+		solicitudes: make(map[uint]models.SolicitudTutoria),
 		nextID:      1,
 	}
 }
@@ -27,7 +27,7 @@ func (s *SolicitudTutoriaStorage) Create(
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	solicitud.ID = s.nextID
+	solicitud.ID = uint (s.nextID)
 	s.solicitudes[solicitud.ID] = solicitud
 	s.nextID++
 
@@ -49,7 +49,7 @@ func (s *SolicitudTutoriaStorage) GetAll() []models.SolicitudTutoria {
 }
 
 func (s *SolicitudTutoriaStorage) GetByID(
-	id int,
+	id uint,
 ) (models.SolicitudTutoria, error) {
 
 	s.mu.Lock()
@@ -66,7 +66,7 @@ func (s *SolicitudTutoriaStorage) GetByID(
 }
 
 func (s *SolicitudTutoriaStorage) Update(
-	id int,
+	id uint,
 	solicitud models.SolicitudTutoria,
 ) (models.SolicitudTutoria, error) {
 
@@ -86,7 +86,7 @@ func (s *SolicitudTutoriaStorage) Update(
 	return solicitud, nil
 }
 
-func (s *SolicitudTutoriaStorage) Delete(id int) error {
+func (s *SolicitudTutoriaStorage) Delete(id uint) error {
 
 	s.mu.Lock()
 	defer s.mu.Unlock()

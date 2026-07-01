@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -8,54 +9,32 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/models"
-	"github.com/steveenacostapatino/tutorias-uleam-api/internal/storage"
+	"github.com/steveenacostapatino/tutorias-uleam-api/internal/services"
 )
 
-var SolicitudesTutoria = storage.NewSolicitudTutoriaStorage()
+type SolicitudTutoriaHandler struct {
+	service services.SolicitudTutoriaServiceInterface
+}
 
-// Crea una nueva solicitud de tutoría.
-func CreateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
+func NewSolicitudTutoriaHandler(service services.SolicitudTutoriaServiceInterface) *SolicitudTutoriaHandler {
+	return &SolicitudTutoriaHandler{
+		service: service,
+	}
+}
+
+func (h *SolicitudTutoriaHandler) CreateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 
 	var solicitud models.SolicitudTutoria
 
-	err := json.NewDecoder(r.Body).Decode(&solicitud)
-
-	if err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&solicitud); err != nil {
 		http.Error(w, "Datos inválidos", http.StatusBadRequest)
 		return
 	}
 
-	// Validaciones
-	if solicitud.EstudianteID <= 0 {
-		http.Error(w, "El estudiante es obligatorio", http.StatusBadRequest)
+	if err := h.service.Create(context.Background(), &solicitud); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	if solicitud.HorarioDocenteID <= 0 {
-		http.Error(w, "El horario docente es obligatorio", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.TipoTutoriaID <= 0 {
-		http.Error(w, "El tipo de tutoría es obligatorio", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.Tema == "" {
-		http.Error(w, "El tema es obligatorio", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.FechaSolicitud == "" {
-		http.Error(w, "La fecha de la solicitud es obligatoria", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.Estado == "" {
-		solicitud.Estado = "Pendiente"
-	}
-
-	solicitud = SolicitudesTutoria.Create(solicitud)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
@@ -63,27 +42,31 @@ func CreateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(solicitud)
 }
 
-// Obtiene todas las solicitudes de tutoría.
-func GetSolicitudesTutoria(w http.ResponseWriter, r *http.Request) {
+func (h *SolicitudTutoriaHandler) GetSolicitudesTutoria(w http.ResponseWriter, r *http.Request) {
+
+	solicitudes, err := h.service.GetAll(context.Background())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(SolicitudesTutoria.GetAll())
+	json.NewEncoder(w).Encode(solicitudes)
 }
 
-// Obtiene una solicitud por ID.
-func GetSolicitudByID(w http.ResponseWriter, r *http.Request) {
+func (h *SolicitudTutoriaHandler) GetSolicitudByID(w http.ResponseWriter, r *http.Request) {
 
 	idParam := chi.URLParam(r, "id")
 
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 
 	if err != nil {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
 	}
 
-	solicitud, err := SolicitudesTutoria.GetByID(id)
+	solicitud, err := h.service.GetByID(context.Background(), uint(id))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -91,16 +74,14 @@ func GetSolicitudByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-
 	json.NewEncoder(w).Encode(solicitud)
 }
 
-// Actualiza una solicitud de tutoría.
-func UpdateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
+func (h *SolicitudTutoriaHandler) UpdateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 
 	idParam := chi.URLParam(r, "id")
 
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 
 	if err != nil {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
@@ -109,65 +90,36 @@ func UpdateSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 
 	var solicitud models.SolicitudTutoria
 
-	err = json.NewDecoder(r.Body).Decode(&solicitud)
-
-	if err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&solicitud); err != nil {
 		http.Error(w, "Datos inválidos", http.StatusBadRequest)
 		return
 	}
 
-	if solicitud.EstudianteID <= 0 {
-		http.Error(w, "El estudiante es obligatorio", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.HorarioDocenteID <= 0 {
-		http.Error(w, "El horario docente es obligatorio", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.TipoTutoriaID <= 0 {
-		http.Error(w, "El tipo de tutoría es obligatorio", http.StatusBadRequest)
-		return
-	}
-
-	if solicitud.Tema == "" {
-		http.Error(w, "El tema es obligatorio", http.StatusBadRequest)
-		return
-	}
-
-	actualizada, err := SolicitudesTutoria.Update(id, solicitud)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+	if err := h.service.Update(context.Background(), uint(id), &solicitud); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(actualizada)
+	json.NewEncoder(w).Encode(solicitud)
 }
 
-// Elimina una solicitud de tutoría.
-func DeleteSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
+func (h *SolicitudTutoriaHandler) DeleteSolicitudTutoria(w http.ResponseWriter, r *http.Request) {
 
 	idParam := chi.URLParam(r, "id")
 
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 
 	if err != nil {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
 	}
 
-	err = SolicitudesTutoria.Delete(id)
-
-	if err != nil {
+	if err := h.service.Delete(context.Background(), uint(id)); err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
 	json.NewEncoder(w).Encode(map[string]string{

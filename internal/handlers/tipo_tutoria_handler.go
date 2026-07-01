@@ -18,7 +18,6 @@ func CreateTipoTutoria(w http.ResponseWriter, r *http.Request) {
 	var tipo models.TipoTutoria
 
 	err := json.NewDecoder(r.Body).Decode(&tipo)
-
 	if err != nil {
 		http.Error(w, "Datos inválidos", http.StatusBadRequest)
 		return
@@ -41,7 +40,6 @@ func CreateTipoTutoria(w http.ResponseWriter, r *http.Request) {
 func GetTiposTutoria(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
-
 	json.NewEncoder(w).Encode(TiposTutoria.GetAll())
 }
 
@@ -51,21 +49,18 @@ func GetTipoTutoriaByID(w http.ResponseWriter, r *http.Request) {
 	idParam := chi.URLParam(r, "id")
 
 	id, err := strconv.Atoi(idParam)
-
 	if err != nil {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
 	}
 
-	tipo, err := TiposTutoria.GetByID(id)
-
+	tipo, err := TiposTutoria.GetByID(uint(id))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-
 	json.NewEncoder(w).Encode(tipo)
 }
 
@@ -75,7 +70,6 @@ func UpdateTipoTutoria(w http.ResponseWriter, r *http.Request) {
 	idParam := chi.URLParam(r, "id")
 
 	id, err := strconv.Atoi(idParam)
-
 	if err != nil {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
@@ -84,7 +78,6 @@ func UpdateTipoTutoria(w http.ResponseWriter, r *http.Request) {
 	var tipo models.TipoTutoria
 
 	err = json.NewDecoder(r.Body).Decode(&tipo)
-
 	if err != nil {
 		http.Error(w, "Datos inválidos", http.StatusBadRequest)
 		return
@@ -95,15 +88,13 @@ func UpdateTipoTutoria(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	actualizado, err := TiposTutoria.Update(id, tipo)
-
+	actualizado, err := TiposTutoria.Update(uint(id), tipo)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-
 	json.NewEncoder(w).Encode(actualizado)
 }
 
@@ -113,14 +104,12 @@ func DeleteTipoTutoria(w http.ResponseWriter, r *http.Request) {
 	idParam := chi.URLParam(r, "id")
 
 	id, err := strconv.Atoi(idParam)
-
 	if err != nil {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
 	}
 
-	err = TiposTutoria.Delete(id)
-
+	err = TiposTutoria.Delete(uint(id))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
