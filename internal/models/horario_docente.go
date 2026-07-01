@@ -1,12 +1,13 @@
 package models
 
-type HorarioDocente struct {
+type DisponibilidadDocente struct {
 	ID         int    `json:"id"`
 	DocenteID  int    `json:"docente_id"`
-	MateriaID  int    `json:"materia_id"`
+	Materia    string `json:"materia"`
 	DiaSemana  string `json:"dia_semana"`
 	HoraInicio string `json:"hora_inicio"`
 	HoraFin    string `json:"hora_fin"`
 	Modalidad  string `json:"modalidad"`
-	Aula       string `json:"aula"`
+	Cupos      int    `json:"cupos"`
+	Estado     string `json:"estado"`
 }
