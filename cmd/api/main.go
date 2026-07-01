@@ -59,7 +59,7 @@ func main() {
 	r.Get("/api/v1/horarios-docente/{id}", handlers.GetHorarioByID)
 	r.Put("/api/v1/horarios-docente/{id}", handlers.UpdateHorario)
 	r.Delete("/api/v1/horarios-docente/{id}", handlers.DeleteHorario)
-	
+
 	// Rutas Estudiantes
 	r.Post("/api/v1/estudiantes", handlers.CreateEstudiante)
 	r.Get("/api/v1/estudiantes", handlers.GetEstudiantes)
@@ -74,12 +74,8 @@ func main() {
 	r.Put("/api/v1/tipos-tutoria/{id}", handlers.UpdateTipoTutoria)
 	r.Delete("/api/v1/tipos-tutoria/{id}", handlers.DeleteTipoTutoria)
 
-	// Solicitudes de Tutoría
-	r.Post("/api/v1/solicitudes-tutoria", handlers.CreateSolicitudTutoria)
-	r.Get("/api/v1/solicitudes-tutoria", handlers.GetSolicitudesTutoria)
-	r.Get("/api/v1/solicitudes-tutoria/{id}", handlers.GetSolicitudByID)
-	r.Put("/api/v1/solicitudes-tutoria/{id}", handlers.UpdateSolicitudTutoria)
-	r.Delete("/api/v1/solicitudes-tutoria/{id}", handlers.DeleteSolicitudTutoria)
+	// Rutas Solicitudes de Tutoría
+	r.Mount("/api/v1/solicitudes-tutoria", solicitudHandler.Routes())
 
 	// Rutas Sesiones de Tutoría
 	r.Mount("/api/v1/sesiones-tutoria", sesionHandler.Routes())

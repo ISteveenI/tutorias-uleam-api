@@ -42,9 +42,9 @@ func TestDocenteService_NoDebeCrearDocenteSinCorreo(t *testing.T) {
 	service := NewDocenteService(mockRepo)
 
 	docente := &models.Docente{
-		Nombres: "Karen",
+		Nombres:   "Karen",
 		Apellidos: "Holguin",
-		Correo: "",
+		Correo:    "",
 	}
 
 	err := service.Create(context.Background(), docente)

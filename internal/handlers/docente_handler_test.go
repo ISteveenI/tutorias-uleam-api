@@ -20,10 +20,10 @@ func (f *FakeDocenteService) Create(ctx context.Context, docente *models.Docente
 
 func (f *FakeDocenteService) GetByID(ctx context.Context, id uint) (*models.Docente, error) {
 	return &models.Docente{
-		ID: id,
-		Nombres: "Karen",
-		Apellidos: "Holguin",
-		Correo: "karen@uleam.edu.ec",
+		ID:           id,
+		Nombres:      "Karen",
+		Apellidos:    "Holguin",
+		Correo:       "karen@uleam.edu.ec",
 		Departamento: "Tecnologías",
 		Especialidad: "Aplicaciones Web",
 	}, nil
@@ -46,9 +46,9 @@ func TestCreateDocente401(t *testing.T) {
 	handler := NewDocenteHandler(&FakeDocenteService{})
 
 	body := models.Docente{
-		Nombres: "Karen",
-		Apellidos: "Holguin",
-		Correo: "karen@uleam.edu.ec",
+		Nombres:      "Karen",
+		Apellidos:    "Holguin",
+		Correo:       "karen@uleam.edu.ec",
 		Departamento: "Tecnologías",
 		Especialidad: "Aplicaciones Web",
 	}
@@ -79,9 +79,9 @@ func TestCreateDocente201(t *testing.T) {
 	handler := NewDocenteHandler(&FakeDocenteService{})
 
 	body := models.Docente{
-		Nombres: "Karen",
-		Apellidos: "Holguin",
-		Correo: "karen@uleam.edu.ec",
+		Nombres:      "Karen",
+		Apellidos:    "Holguin",
+		Correo:       "karen@uleam.edu.ec",
 		Departamento: "Tecnologías",
 		Especialidad: "Aplicaciones Web",
 	}

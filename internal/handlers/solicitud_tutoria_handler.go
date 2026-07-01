@@ -126,3 +126,14 @@ func (h *SolicitudTutoriaHandler) DeleteSolicitudTutoria(w http.ResponseWriter, 
 		"mensaje": "Solicitud de tutoría eliminada correctamente",
 	})
 }
+func (h *SolicitudTutoriaHandler) Routes() chi.Router {
+	r := chi.NewRouter()
+
+	r.Post("/", h.CreateSolicitudTutoria)
+	r.Get("/", h.GetSolicitudesTutoria)
+	r.Get("/{id}", h.GetSolicitudByID)
+	r.Put("/{id}", h.UpdateSolicitudTutoria)
+	r.Delete("/{id}", h.DeleteSolicitudTutoria)
+
+	return r
+}

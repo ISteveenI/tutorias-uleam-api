@@ -8,9 +8,9 @@ import (
 )
 
 type DocenteStorage struct {
-	mu        sync.Mutex
-	docentes  map[int]models.Docente
-	nextID    int
+	mu       sync.Mutex
+	docentes map[int]models.Docente
+	nextID   int
 }
 
 func NewDocenteStorage() *DocenteStorage {
@@ -51,7 +51,7 @@ func (d *DocenteStorage) GetByID(id int) (models.Docente, error) {
 	return docente, nil
 }
 
-func (d *DocenteStorage) Update(id int,docente models.Docente,) (models.Docente, error) {
+func (d *DocenteStorage) Update(id int, docente models.Docente) (models.Docente, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	_, exists := d.docentes[id]

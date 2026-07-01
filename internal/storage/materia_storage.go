@@ -8,9 +8,9 @@ import (
 )
 
 type MateriaStorage struct {
-	mu        sync.Mutex
-	materias  map[int]models.Materia
-	nextID    int
+	mu       sync.Mutex
+	materias map[int]models.Materia
+	nextID   int
 }
 
 func NewMateriaStorage() *MateriaStorage {
@@ -52,7 +52,7 @@ func (m *MateriaStorage) GetByID(id int) (models.Materia, error) {
 	return materia, nil
 }
 
-func (m *MateriaStorage) Update(id int,materia models.Materia,) (models.Materia, error) {
+func (m *MateriaStorage) Update(id int, materia models.Materia) (models.Materia, error) {
 
 	m.mu.Lock()
 	defer m.mu.Unlock()

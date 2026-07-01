@@ -11,7 +11,6 @@ import (
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/storage"
 )
 
-
 // Crear una nueva materia.
 func CreateMateria(w http.ResponseWriter, r *http.Request) {
 
@@ -152,7 +151,6 @@ func DeleteMateria(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
 		"mensaje": "Materia eliminada correctamente",
-
 	})
 
 }

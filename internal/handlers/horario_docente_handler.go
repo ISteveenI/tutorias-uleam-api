@@ -11,7 +11,6 @@ import (
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/storage"
 )
 
-
 // Verifica si existe cruce de horario.
 func ExisteCruceHorario(
 	nuevo models.HorarioDocente,
@@ -251,7 +250,6 @@ func DeleteHorario(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
 		"mensaje": "Horario eliminado correctamente",
-
 	})
 
 }

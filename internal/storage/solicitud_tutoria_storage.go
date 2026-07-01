@@ -8,9 +8,9 @@ import (
 )
 
 type SolicitudTutoriaStorage struct {
-	mu           sync.Mutex
-	solicitudes  map[uint]models.SolicitudTutoria
-	nextID       int
+	mu          sync.Mutex
+	solicitudes map[uint]models.SolicitudTutoria
+	nextID      int
 }
 
 func NewSolicitudTutoriaStorage() *SolicitudTutoriaStorage {
@@ -27,7 +27,7 @@ func (s *SolicitudTutoriaStorage) Create(
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	solicitud.ID = uint (s.nextID)
+	solicitud.ID = uint(s.nextID)
 	s.solicitudes[solicitud.ID] = solicitud
 	s.nextID++
 

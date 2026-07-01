@@ -19,7 +19,7 @@ func TestGormDocenteRepository_CreateAndFindAll(t *testing.T) {
 	err = db.AutoMigrate(
 		&models.Docente{},
 	)
-	
+
 	if err != nil {
 		t.Fatalf("error al migrar: %v", err)
 	}

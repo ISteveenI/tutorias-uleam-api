@@ -8,9 +8,9 @@ import (
 )
 
 type HorarioStorage struct {
-	mu        sync.Mutex
-	horarios  map[int]models.HorarioDocente
-	nextID    int
+	mu       sync.Mutex
+	horarios map[int]models.HorarioDocente
+	nextID   int
 }
 
 func NewHorarioStorage() *HorarioStorage {
@@ -21,7 +21,7 @@ func NewHorarioStorage() *HorarioStorage {
 }
 
 // Validar cruce de horario
-func (h *HorarioStorage) ExisteCruceHorario(nuevo models.HorarioDocente,) bool {
+func (h *HorarioStorage) ExisteCruceHorario(nuevo models.HorarioDocente) bool {
 
 	for _, horario := range h.horarios {
 		if horario.DocenteID != nuevo.DocenteID {
@@ -38,7 +38,7 @@ func (h *HorarioStorage) ExisteCruceHorario(nuevo models.HorarioDocente,) bool {
 	return false
 }
 
-func (h *HorarioStorage) Create(horario models.HorarioDocente,) (models.HorarioDocente, error) {
+func (h *HorarioStorage) Create(horario models.HorarioDocente) (models.HorarioDocente, error) {
 
 	h.mu.Lock()
 	defer h.mu.Unlock()
@@ -63,7 +63,7 @@ func (h *HorarioStorage) GetAll() []models.HorarioDocente {
 	return lista
 }
 
-func (h *HorarioStorage) GetByID(id int,) (models.HorarioDocente, error) {
+func (h *HorarioStorage) GetByID(id int) (models.HorarioDocente, error) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	horario, exists := h.horarios[id]
@@ -74,7 +74,7 @@ func (h *HorarioStorage) GetByID(id int,) (models.HorarioDocente, error) {
 	return horario, nil
 }
 
-func (h *HorarioStorage) Update(id int,horario models.HorarioDocente,) (models.HorarioDocente, error) {
+func (h *HorarioStorage) Update(id int, horario models.HorarioDocente) (models.HorarioDocente, error) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	_, exists := h.horarios[id]
