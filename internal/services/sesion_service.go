@@ -25,19 +25,51 @@ type SesionServiceInterface interface {
 
 type SesionService struct {
 	repo repositories.SesionRepository
+
+	// estadoPorDefecto permite configurar el estado inicial de una sesión
+	// sin dejar el valor quemado directamente dentro del método Create.
+	estadoPorDefecto string
 }
 
-func NewSesionService(repo repositories.SesionRepository) *SesionService {
-	return &SesionService{repo: repo}
+// SesionOption representa una configuración opcional para SesionService.
+// Se usa el patrón Functional Options para no modificar la forma tradicional
+// de crear el service cuando no se necesita configuración extra.
+type SesionOption func(*SesionService)
+
+// WithEstadoPorDefecto permite cambiar el estado inicial usado cuando
+// una sesión se crea sin estado explícito.
+func WithEstadoPorDefecto(estado string) SesionOption {
+	return func(s *SesionService) {
+		if strings.TrimSpace(estado) != "" {
+			s.estadoPorDefecto = estado
+		}
+	}
+}
+
+// NewSesionService crea el service de sesiones.
+// Por defecto usa el estado "Programada", pero permite recibir opciones
+// para personalizar valores sin romper las llamadas existentes.
+func NewSesionService(repo repositories.SesionRepository, opts ...SesionOption) *SesionService {
+	service := &SesionService{
+		repo:             repo,
+		estadoPorDefecto: "Programada",
+	}
+
+	for _, opt := range opts {
+		opt(service)
+	}
+
+	return service
 }
 
 func (s *SesionService) Create(ctx context.Context, sesion *models.SesionTutoria) error {
 	if err := validarSesion(sesion); err != nil {
 		return err
 	}
-
+	// Si el cliente no envía un estado, se usa el estado configurado
+	// en el service mediante Functional Options.
 	if strings.TrimSpace(sesion.Estado) == "" {
-		sesion.Estado = "Programada"
+		sesion.Estado = s.estadoPorDefecto
 	}
 
 	return s.repo.Create(ctx, sesion)
