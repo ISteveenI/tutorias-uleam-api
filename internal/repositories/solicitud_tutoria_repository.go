@@ -58,17 +58,19 @@ func (r *GormSolicitudTutoriaRepository) FindAll(ctx context.Context) ([]models.
 
 func (r *GormSolicitudTutoriaRepository) Update(ctx context.Context, solicitud *models.SolicitudTutoria) error {
 
-	result := r.db.WithContext(ctx).Save(solicitud)
+	var existente models.SolicitudTutoria
 
-	if result.Error != nil {
-		return result.Error
-	}
+	err := r.db.WithContext(ctx).First(&existente, solicitud.ID).Error
 
-	if result.RowsAffected == 0 {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return ErrRegistroNoEncontrado
 	}
 
-	return nil
+	if err != nil {
+		return err
+	}
+
+	return r.db.WithContext(ctx).Save(solicitud).Error
 }
 
 func (r *GormSolicitudTutoriaRepository) Delete(ctx context.Context, id uint) error {

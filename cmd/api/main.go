@@ -15,7 +15,7 @@ import (
 
 func main() {
 
-	db, err := database.ConnectSQLite("tutorias.db")
+	db, err := database.ConnectPostgres()
 	if err != nil {
 		fmt.Println("Error al conectar la base de datos:", err)
 		return

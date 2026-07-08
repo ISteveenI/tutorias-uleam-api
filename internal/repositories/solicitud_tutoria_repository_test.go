@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func TestSolicitudRepository_CreateAndFindAll(t *testing.T) {
+func setupSolicitudRepository(t *testing.T) *GormSolicitudTutoriaRepository {
 
 	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
 	if err != nil {
@@ -25,9 +25,11 @@ func TestSolicitudRepository_CreateAndFindAll(t *testing.T) {
 		t.Fatalf("error automigrate: %v", err)
 	}
 
-	repo := NewGormSolicitudTutoriaRepository(db)
+	return NewGormSolicitudTutoriaRepository(db)
+}
 
-	solicitud := &models.SolicitudTutoria{
+func crearSolicitudPrueba() *models.SolicitudTutoria {
+	return &models.SolicitudTutoria{
 		EstudianteID:     1,
 		HorarioDocenteID: 2,
 		TipoTutoriaID:    1,
@@ -35,24 +37,142 @@ func TestSolicitudRepository_CreateAndFindAll(t *testing.T) {
 		FechaSolicitud:   "2026-06-30",
 		Estado:           "Pendiente",
 	}
+}
 
-	err = repo.Create(context.Background(), solicitud)
+func TestSolicitudRepository_CreateAndFindAll(t *testing.T) {
 
+	repo := setupSolicitudRepository(t)
+
+	solicitud := crearSolicitudPrueba()
+
+	err := repo.Create(context.Background(), solicitud)
 	if err != nil {
 		t.Fatalf("error al crear: %v", err)
 	}
 
-	solicitudes, err := repo.FindAll(context.Background())
-
+	lista, err := repo.FindAll(context.Background())
 	if err != nil {
 		t.Fatalf("error al listar: %v", err)
 	}
 
-	if len(solicitudes) != 1 {
-		t.Fatalf("se esperaba 1 solicitud y se obtuvo %d", len(solicitudes))
+	if len(lista) != 1 {
+		t.Fatalf("se esperaba 1 registro y se obtuvo %d", len(lista))
 	}
 
-	if solicitudes[0].Tema != "POO" {
-		t.Fatalf("tema incorrecto")
+	if lista[0].Tema != "POO" {
+		t.Fatal("tema incorrecto")
+	}
+}
+
+func TestSolicitudRepository_FindByID(t *testing.T) {
+
+	repo := setupSolicitudRepository(t)
+
+	solicitud := crearSolicitudPrueba()
+
+	err := repo.Create(context.Background(), solicitud)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	encontrada, err := repo.FindByID(context.Background(), solicitud.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if encontrada.ID != solicitud.ID {
+		t.Fatal("id incorrecto")
+	}
+}
+
+func TestSolicitudRepository_Update(t *testing.T) {
+
+	repo := setupSolicitudRepository(t)
+
+	solicitud := crearSolicitudPrueba()
+
+	err := repo.Create(context.Background(), solicitud)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	solicitud.Tema = "Bases de Datos"
+	solicitud.Estado = "Aprobada"
+
+	err = repo.Update(context.Background(), solicitud)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	actualizada, err := repo.FindByID(context.Background(), solicitud.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if actualizada.Tema != "Bases de Datos" {
+		t.Fatal("no se actualizó el tema")
+	}
+
+	if actualizada.Estado != "Aprobada" {
+		t.Fatal("no se actualizó el estado")
+	}
+}
+
+func TestSolicitudRepository_Delete(t *testing.T) {
+
+	repo := setupSolicitudRepository(t)
+
+	solicitud := crearSolicitudPrueba()
+
+	err := repo.Create(context.Background(), solicitud)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = repo.Delete(context.Background(), solicitud.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = repo.FindByID(context.Background(), solicitud.ID)
+
+	if err == nil {
+		t.Fatal("el registro debió eliminarse")
+	}
+}
+
+func TestSolicitudRepository_FindByID_NotFound(t *testing.T) {
+
+	repo := setupSolicitudRepository(t)
+
+	_, err := repo.FindByID(context.Background(), 999)
+
+	if err == nil {
+		t.Fatal("se esperaba un error")
+	}
+}
+
+func TestSolicitudRepository_Delete_NotFound(t *testing.T) {
+
+	repo := setupSolicitudRepository(t)
+
+	err := repo.Delete(context.Background(), 999)
+
+	if err == nil {
+		t.Fatal("se esperaba un error")
+	}
+}
+
+func TestSolicitudRepository_Update_NotFound(t *testing.T) {
+
+	repo := setupSolicitudRepository(t)
+
+	solicitud := crearSolicitudPrueba()
+	solicitud.ID = 999
+
+	err := repo.Update(context.Background(), solicitud)
+
+	if err == nil {
+		t.Fatal("se esperaba un error")
 	}
 }
