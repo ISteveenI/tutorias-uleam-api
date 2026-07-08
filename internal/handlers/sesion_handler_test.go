@@ -74,7 +74,7 @@ func TestCreateSesionSinTokenResponde401(t *testing.T) {
 
 	sesionHandler.Routes().ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusTeapot {
+	if rr.Code != http.StatusUnauthorized {
 		t.Fatalf("se esperaba status 401, pero se obtuvo %d", rr.Code)
 	}
 }
