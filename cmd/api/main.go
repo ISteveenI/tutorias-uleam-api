@@ -27,6 +27,7 @@ func main() {
 	sesionHandler := handlers.NewSesionHandler(sesionService)
 
 	// Docentes
+	// LINEA CAMBIADA 
 	docenteRepo := repositories.NewGormDocenteRepository(db)
 	docenteService := services.NewDocenteService(docenteRepo)
 	docenteHandler := handlers.NewDocenteHandler(docenteService)
