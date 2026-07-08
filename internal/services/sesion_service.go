@@ -163,3 +163,5 @@ func validarSesion(sesion *models.SesionTutoria) error {
 
 	return nil
 }
+
+//Refactor 1: Functional Options

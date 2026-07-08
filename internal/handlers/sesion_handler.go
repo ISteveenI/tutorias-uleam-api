@@ -227,3 +227,5 @@ func manejarErrorSesion(w http.ResponseWriter, err error) {
 
 	escribirSesionError(w, http.StatusInternalServerError, "Error interno del servidor")
 }
+
+//Refactor 2: DRY con idDeURL
