@@ -51,7 +51,7 @@ func (r *GormSolicitudTutoriaRepository) FindAll(ctx context.Context) ([]models.
 
 	var solicitudes []models.SolicitudTutoria
 
-	err := r.db.WithContext(ctx).Find(&solicitudes).Error
+	err := r.db.WithContext(ctx).Preload("TipoTutoria").Find(&solicitudes).Error
 
 	return solicitudes, err
 }

@@ -1,7 +1,7 @@
 package models
 
 type SolicitudTutoria struct {
-	ID               uint   `gorm:"primaryKey" json:"id"`
+	ID               uint    `gorm:"primaryKey" json:"id"`
 	EstudianteID     int    `json:"estudiante_id"`
 	HorarioDocenteID int    `json:"horario_docente_id"`
 	TipoTutoriaID    int    `json:"tipo_tutoria_id"`

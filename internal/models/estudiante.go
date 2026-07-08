@@ -1,7 +1,7 @@
 package models
 
 type Estudiante struct {
-	ID        int    `json:"id"`
+	ID        uint   `gorm:"primaryKey" json:"id"`
 	Nombres   string `json:"nombres"`
 	Apellidos string `json:"apellidos"`
 	Correo    string `json:"correo"`

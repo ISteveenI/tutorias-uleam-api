@@ -10,7 +10,7 @@ import (
 type TipoTutoriaStorage struct {
 	mu           sync.Mutex
 	tiposTutoria map[uint]models.TipoTutoria
-	nextID       int
+	nextID       uint
 }
 
 func NewTipoTutoriaStorage() *TipoTutoriaStorage {
@@ -21,10 +21,11 @@ func NewTipoTutoriaStorage() *TipoTutoriaStorage {
 }
 
 func (t *TipoTutoriaStorage) Create(tipo models.TipoTutoria) models.TipoTutoria {
+
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	tipo.ID = uint(t.nextID)
+	tipo.ID = t.nextID
 	t.tiposTutoria[tipo.ID] = tipo
 	t.nextID++
 
@@ -32,6 +33,7 @@ func (t *TipoTutoriaStorage) Create(tipo models.TipoTutoria) models.TipoTutoria 
 }
 
 func (t *TipoTutoriaStorage) GetAll() []models.TipoTutoria {
+
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
@@ -45,10 +47,12 @@ func (t *TipoTutoriaStorage) GetAll() []models.TipoTutoria {
 }
 
 func (t *TipoTutoriaStorage) GetByID(id uint) (models.TipoTutoria, error) {
+
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
 	tipo, exists := t.tiposTutoria[id]
+
 	if !exists {
 		return models.TipoTutoria{}, errors.New("tipo de tutoría no encontrado")
 	}
@@ -57,10 +61,12 @@ func (t *TipoTutoriaStorage) GetByID(id uint) (models.TipoTutoria, error) {
 }
 
 func (t *TipoTutoriaStorage) Update(id uint, tipo models.TipoTutoria) (models.TipoTutoria, error) {
+
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
 	_, exists := t.tiposTutoria[id]
+
 	if !exists {
 		return models.TipoTutoria{}, errors.New("tipo de tutoría no encontrado")
 	}
@@ -72,10 +78,12 @@ func (t *TipoTutoriaStorage) Update(id uint, tipo models.TipoTutoria) (models.Ti
 }
 
 func (t *TipoTutoriaStorage) Delete(id uint) error {
+
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
 	_, exists := t.tiposTutoria[id]
+
 	if !exists {
 		return errors.New("tipo de tutoría no encontrado")
 	}
