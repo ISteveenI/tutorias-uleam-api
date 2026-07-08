@@ -28,7 +28,7 @@ func main() {
 
 	// Docentes
 	// LINEA CAMBIADA 
-	docenteRepo := repositories.NewGormDocenteRepository(db)
+	docenteRepoo := repositories.NewGormDocenteRepository(db)
 	docenteService := services.NewDocenteService(docenteRepo)
 	docenteHandler := handlers.NewDocenteHandler(docenteService)
 
