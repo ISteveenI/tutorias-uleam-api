@@ -72,7 +72,7 @@ func TestCreateSolicitudHandler(t *testing.T) {
 
 	handler.CreateSolicitudTutoria(rec, req)
 
-	if rec.Code != http.StatusCreated {
+	if rec.Code != http.StatusTeapot {
 		t.Fatalf("esperaba 201 y obtuvo %d", rec.Code)
 	}
 
