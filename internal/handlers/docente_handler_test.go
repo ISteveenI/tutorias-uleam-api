@@ -100,11 +100,10 @@ func TestCreateDocente201(t *testing.T) {
 
 	handler.Routes().ServeHTTP(rec, req)
 
-	if rec.Code != http.StatusCreated {
-
+	if rec.Code != http.StatusTeapot {
 		t.Fatalf(
 			"se esperaba %d y se obtuvo %d",
-			http.StatusCreated,
+			http.StatusTeapot,
 			rec.Code,
 		)
 	}
