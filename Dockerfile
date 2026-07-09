@@ -7,11 +7,13 @@ RUN go mod download
 
 COPY . .
 
+ENV CGO_ENABLED=0
+
 RUN go build -o server ./cmd/api
 
 FROM alpine:latest
 
-WORKDIR /root/
+WORKDIR /app
 
 COPY --from=builder /app/server .
 
