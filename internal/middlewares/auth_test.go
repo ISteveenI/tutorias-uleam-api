@@ -30,7 +30,7 @@ func TestRequireAuthWithToken(t *testing.T) {
 	}))
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
-	req.Header.Set("Authorization", "Bearer token")
+	req.Header.Set("Authorization", "Bearer token-prueba")
 
 	rec := httptest.NewRecorder()
 
