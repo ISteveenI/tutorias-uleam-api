@@ -4,10 +4,81 @@ import (
 	"time"
 
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/models"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 func SeedDatosIniciales(db *gorm.DB) error {
+	if err := seedUsuarios(db); err != nil {
+		return err
+	}
+
+	if err := seedSesiones(db); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func seedUsuarios(db *gorm.DB) error {
+	var totalUsuarios int64
+
+	if err := db.Model(&models.Usuario{}).Count(&totalUsuarios).Error; err != nil {
+		return err
+	}
+
+	if totalUsuarios > 0 {
+		return nil
+	}
+
+	usuarios := []struct {
+		Nombre   string
+		Correo   string
+		Password string
+		Rol      string
+	}{
+		{
+			Nombre:   "Administrador",
+			Correo:   "admin@uleam.edu.ec",
+			Password: "admin123",
+			Rol:      "admin",
+		},
+		{
+			Nombre:   "Docente Demo",
+			Correo:   "docente@uleam.edu.ec",
+			Password: "docente123",
+			Rol:      "docente",
+		},
+		{
+			Nombre:   "Estudiante Demo",
+			Correo:   "estudiante@uleam.edu.ec",
+			Password: "estudiante123",
+			Rol:      "estudiante",
+		},
+	}
+
+	for _, item := range usuarios {
+		hash, err := bcrypt.GenerateFromPassword([]byte(item.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return err
+		}
+
+		usuario := models.Usuario{
+			Nombre:       item.Nombre,
+			Correo:       item.Correo,
+			PasswordHash: string(hash),
+			Rol:          item.Rol,
+		}
+
+		if err := db.Create(&usuario).Error; err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func seedSesiones(db *gorm.DB) error {
 	var totalSesiones int64
 
 	if err := db.Model(&models.SesionTutoria{}).Count(&totalSesiones).Error; err != nil {

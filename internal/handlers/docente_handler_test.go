@@ -93,8 +93,8 @@ func TestCreateDocente201(t *testing.T) {
 		"/",
 		bytes.NewBuffer(jsonBody),
 	)
-
-	req.Header.Set("Authorization", "Bearer prueba")
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer token-prueba")
 
 	rec := httptest.NewRecorder()
 
