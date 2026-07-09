@@ -20,7 +20,10 @@ func main() {
 		fmt.Println("Error al conectar la base de datos:", err)
 		return
 	}
-
+	// Auth
+	usuarioRepo := repositories.NewGormUsuarioRepository(db)
+	authService := services.NewAuthService(usuarioRepo)
+	authHandler := handlers.NewAuthHandler(authService)
 	// Sesiones
 	sesionRepo := repositories.NewGormSesionRepository(db)
 	sesionService := services.NewSesionService(sesionRepo)
@@ -37,7 +40,8 @@ func main() {
 	solicitudHandler := handlers.NewSolicitudTutoriaHandler(solicitudService)
 
 	r := chi.NewRouter()
-
+	// Rutas Auth
+	r.Mount("/api/v1/auth", authHandler.Routes())
 	// Storage de módulos antiguos
 	storage.NewDocenteStorage()
 	storage.NewMateriaStorage()

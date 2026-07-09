@@ -60,6 +60,7 @@ func ConnectPostgres() (*gorm.DB, error) {
 	}
 
 	err = db.AutoMigrate(
+		&models.Usuario{},
 		&models.Docente{},
 		&models.SesionTutoria{},
 		&models.Asistencia{},
