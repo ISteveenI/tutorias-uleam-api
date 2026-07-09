@@ -65,14 +65,14 @@ func GetEstudianteByID(w http.ResponseWriter, r *http.Request) {
 
 	idParam := chi.URLParam(r, "id")
 
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 
 	if err != nil {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
 	}
 
-	estudiante, err := Estudiantes.GetByID(id)
+	estudiante, err := Estudiantes.GetByID(uint(id))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -88,7 +88,7 @@ func UpdateEstudiante(w http.ResponseWriter, r *http.Request) {
 
 	idParam := chi.URLParam(r, "id")
 
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 
 	if err != nil {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
@@ -114,7 +114,7 @@ func UpdateEstudiante(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	actualizado, err := Estudiantes.Update(id, estudiante)
+	actualizado, err := Estudiantes.Update(uint(id), estudiante)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -130,14 +130,14 @@ func DeleteEstudiante(w http.ResponseWriter, r *http.Request) {
 
 	idParam := chi.URLParam(r, "id")
 
-	id, err := strconv.Atoi(idParam)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 
 	if err != nil {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
 	}
 
-	err = Estudiantes.Delete(id)
+	err = Estudiantes.Delete(uint(id))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

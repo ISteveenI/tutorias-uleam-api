@@ -9,13 +9,13 @@ import (
 
 type EstudianteStorage struct {
 	mu          sync.Mutex
-	estudiantes map[int]models.Estudiante
-	nextID      int
+	estudiantes map[uint]models.Estudiante
+	nextID      uint
 }
 
 func NewEstudianteStorage() *EstudianteStorage {
 	return &EstudianteStorage{
-		estudiantes: make(map[int]models.Estudiante),
+		estudiantes: make(map[uint]models.Estudiante),
 		nextID:      1,
 	}
 }
@@ -46,7 +46,7 @@ func (e *EstudianteStorage) GetAll() []models.Estudiante {
 	return lista
 }
 
-func (e *EstudianteStorage) GetByID(id int) (models.Estudiante, error) {
+func (e *EstudianteStorage) GetByID(id uint) (models.Estudiante, error) {
 
 	e.mu.Lock()
 	defer e.mu.Unlock()
@@ -60,7 +60,7 @@ func (e *EstudianteStorage) GetByID(id int) (models.Estudiante, error) {
 	return estudiante, nil
 }
 
-func (e *EstudianteStorage) Update(id int, estudiante models.Estudiante) (models.Estudiante, error) {
+func (e *EstudianteStorage) Update(id uint, estudiante models.Estudiante) (models.Estudiante, error) {
 
 	e.mu.Lock()
 	defer e.mu.Unlock()
@@ -77,7 +77,7 @@ func (e *EstudianteStorage) Update(id int, estudiante models.Estudiante) (models
 	return estudiante, nil
 }
 
-func (e *EstudianteStorage) Delete(id int) error {
+func (e *EstudianteStorage) Delete(id uint) error {
 
 	e.mu.Lock()
 	defer e.mu.Unlock()
