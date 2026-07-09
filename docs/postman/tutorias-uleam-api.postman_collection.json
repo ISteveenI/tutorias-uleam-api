@@ -1,0 +1,728 @@
+{
+  "info": {
+    "_postman_id": "ccdf500a-332b-4abd-9ae6-9a1b91b3426b",
+    "name": "Tutorias ULEAM API - Hito 3",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55790704",
+    "_collection_link": "https://go.postman.co/collection/55790704-ccdf500a-332b-4abd-9ae6-9a1b91b3426b?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Listar sesiones de tutoría",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/sesiones-tutoria/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sesiones-tutoria",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();\r",
+              "pm.environment.set(\"token\", response.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"correo\": \"admin@uleam.edu.ec\",\r\n  \"password\": \"admin123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/auth/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Perfil autenticado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/auth/perfil",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "perfil"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ruta admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/auth/admin",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "admin"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login estudiante",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();\r",
+              "pm.environment.set(\"token_estudiante\", response.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"correo\": \"estudiante@uleam.edu.ec\",\r\n  \"password\": \"estudiante123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/auth/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ruta admin con estudiante",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_estudiante}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/auth/admin",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "admin"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Crear sesión con JWT",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_estudiante}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/auth/admin",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "admin"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Registrar asistencia",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"estudiante_asistio\": true,\r\n  \"docente_asistio\": true,\r\n  \"observacion\": \"Asistieron estudiante y docente a la tutoría\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/sesiones-tutoria/1/asistencias",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sesiones-tutoria",
+            "1",
+            "asistencias"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Registrar evidencia",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"tipo_archivo\": \"pdf\",\r\n  \"archivo_url\": \"https://example.com/evidencia-tutoria.pdf\",\r\n  \"descripcion\": \"Evidencia registrada desde Postman para la sesión de tutoría\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/sesiones-tutoria/1/evidencias",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sesiones-tutoria",
+            "1",
+            "evidencias"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar sesión por ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/sesiones-tutoria/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sesiones-tutoria",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "actualizar sesion",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"solicitud_id\": 1,\r\n  \"fecha_sesion\": \"2026-07-03\",\r\n  \"hora_inicio\": \"10:00\",\r\n  \"hora_fin\": \"11:00\",\r\n  \"observaciones\": \"Sesión actualizada desde Postman\",\r\n  \"estado\": \"Realizada\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/sesiones-tutoria/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sesiones-tutoria",
+            "1"
+          ]
+        },
+        "description": "Aquí actualizo una sesión existente. El handler recibe el ID de la URL, el service valida los datos y el repository ejecuta la actualización con GORM. Esta ruta requiere JWT porque modifica información del sistema.EndFragment"
+      },
+      "response": []
+    },
+    {
+      "name": "Eliminar sesión",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/sesiones-tutoria/2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sesiones-tutoria",
+            "2"
+          ]
+        },
+        "description": "Este endpoint elimina una sesión de tutoría. La operación está protegida con JWT porque modifica datos del sistema. El handler toma el ID desde la URL, el service valida que el ID sea válido y el repository ejecuta la eliminación con GORM.EndFragment"
+      },
+      "response": []
+    },
+    {
+      "name": "Crear sesión sin token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"solicitud_id\": 1,\r\n  \"fecha_sesion\": \"2026-07-05\",\r\n  \"hora_inicio\": \"08:00\",\r\n  \"hora_fin\": \"09:00\",\r\n  \"observaciones\": \"Intento sin token\",\r\n  \"estado\": \"Programada\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/sesiones-tutoria/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sesiones-tutoria",
+            ""
+          ]
+        },
+        "description": "Aquí intento crear una sesión sin JWT. El middleware bloquea la petición antes de llegar al handler, por eso responde 401.EndFragment"
+      },
+      "response": []
+    },
+    {
+      "name": "Crear sesión inválida",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"solicitud_id\": 0,\r\n  \"fecha_sesion\": \"\",\r\n  \"hora_inicio\": \"10:00\",\r\n  \"hora_fin\": \"09:00\",\r\n  \"observaciones\": \"Datos inválidos\",\r\n  \"estado\": \"Programada\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/sesiones-tutoria/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sesiones-tutoria",
+            ""
+          ]
+        },
+        "description": "StartFragmentAquí sí envío JWT, pero los datos no pasan las validaciones del service. Por eso el sistema responde 400 y no registra la sesión en la base de datos.EndFragment"
+      },
+      "response": []
+    },
+    {
+      "name": "Crear sesión inválida Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"solicitud_id\": 0,\r\n  \"fecha_sesion\": \"\",\r\n  \"hora_inicio\": \"10:00\",\r\n  \"hora_fin\": \"09:00\",\r\n  \"observaciones\": \"Datos inválidos\",\r\n  \"estado\": \"Programada\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/sesiones-tutoria/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "sesiones-tutoria",
+            ""
+          ]
+        },
+        "description": "StartFragmentAquí sí envío JWT, pero los datos no pasan las validaciones del service. Por eso el sistema responde 400 y no registra la sesión en la base de datos.EndFragment"
+      },
+      "response": []
+    }
+  ]
+}
