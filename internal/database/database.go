@@ -5,12 +5,16 @@ import (
 	"os"
 	"time"
 
+	"github.com/joho/godotenv"
+
 	"github.com/steveenacostapatino/tutorias-uleam-api/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func ConnectPostgres() (*gorm.DB, error) {
+
+	_ = godotenv.Load()
 
 	host := os.Getenv("DB_HOST")
 	user := os.Getenv("DB_USER")
@@ -31,35 +35,36 @@ func ConnectPostgres() (*gorm.DB, error) {
 		dbname,
 		port,
 	)
-    
-    var db *gorm.DB
-    var err error
-    
-    for i := 0; i < 10; i++ {
-        
-        db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-        
-        if err == nil {
-            
-            sqlDB, err2 := db.DB()
-            
-            if err2 == nil && sqlDB.Ping() == nil {
-            
-                fmt.Println("Conectado a PostgreSQL")
-                break
-            }
-        }
 
-        fmt.Println("Esperando a PostgreSQL...")
+	var db *gorm.DB
+	var err error
 
-        time.Sleep(3 * time.Second)
-    }
-    
+	for i := 0; i < 10; i++ {
+
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+		if err == nil {
+
+			sqlDB, err2 := db.DB()
+
+			if err2 == nil && sqlDB.Ping() == nil {
+
+				fmt.Println("Conectado a PostgreSQL")
+				break
+			}
+		}
+
+		fmt.Println("Esperando a PostgreSQL...")
+
+		time.Sleep(3 * time.Second)
+	}
+
 	if err != nil {
 		return nil, err
 	}
 
 	err = db.AutoMigrate(
+		&models.User{},
 		&models.Docente{},
 		&models.SesionTutoria{},
 		&models.Asistencia{},

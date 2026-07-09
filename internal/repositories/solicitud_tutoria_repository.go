@@ -34,7 +34,10 @@ func (r *GormSolicitudTutoriaRepository) FindByID(ctx context.Context, id uint) 
 
 	var solicitud models.SolicitudTutoria
 
-	err := r.db.WithContext(ctx).First(&solicitud, id).Error
+	err := r.db.
+		WithContext(ctx).
+		Preload("TipoTutoria").
+		First(&solicitud, id).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, ErrRegistroNoEncontrado
@@ -51,7 +54,10 @@ func (r *GormSolicitudTutoriaRepository) FindAll(ctx context.Context) ([]models.
 
 	var solicitudes []models.SolicitudTutoria
 
-	err := r.db.WithContext(ctx).Preload("TipoTutoria").Find(&solicitudes).Error
+	err := r.db.
+		WithContext(ctx).
+		Preload("TipoTutoria").
+		Find(&solicitudes).Error
 
 	return solicitudes, err
 }

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -31,7 +30,7 @@ func (h *SolicitudTutoriaHandler) CreateSolicitudTutoria(w http.ResponseWriter, 
 		return
 	}
 
-	if err := h.service.Create(context.Background(), &solicitud); err != nil {
+	if err := h.service.Create(r.Context(), &solicitud); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -44,7 +43,7 @@ func (h *SolicitudTutoriaHandler) CreateSolicitudTutoria(w http.ResponseWriter, 
 
 func (h *SolicitudTutoriaHandler) GetSolicitudesTutoria(w http.ResponseWriter, r *http.Request) {
 
-	solicitudes, err := h.service.GetAll(context.Background())
+	solicitudes, err := h.service.GetAll(r.Context())
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -66,7 +65,7 @@ func (h *SolicitudTutoriaHandler) GetSolicitudByID(w http.ResponseWriter, r *htt
 		return
 	}
 
-	solicitud, err := h.service.GetByID(context.Background(), uint(id))
+	solicitud, err := h.service.GetByID(r.Context(), uint(id))
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -95,7 +94,7 @@ func (h *SolicitudTutoriaHandler) UpdateSolicitudTutoria(w http.ResponseWriter, 
 		return
 	}
 
-	if err := h.service.Update(context.Background(), uint(id), &solicitud); err != nil {
+	if err := h.service.Update(r.Context(), uint(id), &solicitud); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -115,7 +114,7 @@ func (h *SolicitudTutoriaHandler) DeleteSolicitudTutoria(w http.ResponseWriter, 
 		return
 	}
 
-	if err := h.service.Delete(context.Background(), uint(id)); err != nil {
+	if err := h.service.Delete(r.Context(), uint(id)); err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
@@ -126,6 +125,7 @@ func (h *SolicitudTutoriaHandler) DeleteSolicitudTutoria(w http.ResponseWriter, 
 		"mensaje": "Solicitud de tutoría eliminada correctamente",
 	})
 }
+
 func (h *SolicitudTutoriaHandler) Routes() chi.Router {
 	r := chi.NewRouter()
 

@@ -176,3 +176,65 @@ func TestSolicitudRepository_Update_NotFound(t *testing.T) {
 		t.Fatal("se esperaba un error")
 	}
 }
+
+func TestSolicitudRepository_CreateMultipleAndFindAll(t *testing.T) {
+
+	repo := setupSolicitudRepository(t)
+
+	solicitud1 := crearSolicitudPrueba()
+
+	solicitud2 := crearSolicitudPrueba()
+	solicitud2.Tema = "Bases de Datos"
+
+	err := repo.Create(context.Background(), solicitud1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = repo.Create(context.Background(), solicitud2)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	lista, err := repo.FindAll(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(lista) != 2 {
+		t.Fatalf("se esperaban 2 registros y se obtuvieron %d", len(lista))
+	}
+}
+
+func TestSolicitudRepository_UpdatePersistsChanges(t *testing.T) {
+
+	repo := setupSolicitudRepository(t)
+
+	solicitud := crearSolicitudPrueba()
+
+	err := repo.Create(context.Background(), solicitud)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	solicitud.Tema = "Ingeniería de Software"
+	solicitud.Estado = "Aceptada"
+
+	err = repo.Update(context.Background(), solicitud)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	encontrada, err := repo.FindByID(context.Background(), solicitud.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if encontrada.Tema != "Ingeniería de Software" {
+		t.Fatal("el tema no se actualizó")
+	}
+
+	if encontrada.Estado != "Aceptada" {
+		t.Fatal("el estado no se actualizó")
+	}
+}
