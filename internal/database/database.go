@@ -31,30 +31,30 @@ func ConnectPostgres() (*gorm.DB, error) {
 		dbname,
 		port,
 	)
-    
-    var db *gorm.DB
-    var err error
-    
-    for i := 0; i < 10; i++ {
-        
-        db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-        
-        if err == nil {
-            
-            sqlDB, err2 := db.DB()
-            
-            if err2 == nil && sqlDB.Ping() == nil {
-            
-                fmt.Println("Conectado a PostgreSQL")
-                break
-            }
-        }
 
-        fmt.Println("Esperando a PostgreSQL...")
+	var db *gorm.DB
+	var err error
 
-        time.Sleep(3 * time.Second)
-    }
-    
+	for i := 0; i < 10; i++ {
+
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+		if err == nil {
+
+			sqlDB, err2 := db.DB()
+
+			if err2 == nil && sqlDB.Ping() == nil {
+
+				fmt.Println("Conectado a PostgreSQL")
+				break
+			}
+		}
+
+		fmt.Println("Esperando a PostgreSQL...")
+
+		time.Sleep(3 * time.Second)
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -69,6 +69,10 @@ func ConnectPostgres() (*gorm.DB, error) {
 	)
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err := SeedDatosIniciales(db); err != nil {
 		return nil, err
 	}
 
